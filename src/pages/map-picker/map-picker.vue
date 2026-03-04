@@ -78,21 +78,23 @@ export default {
         this.reverseGeocode(lnglat.lng, lnglat.lat)
       })
 
-      // 尝试获取当前位置
-      AMap.plugin('AMap.Geolocation', () => {
-        const geolocation = new AMap.Geolocation({
-          enableHighAccuracy: true,
-          timeout: 10000
-        })
-        geolocation.getCurrentPosition((status, result) => {
-          if (status === 'complete') {
-            const { lng, lat } = result.position
+      // 尝试获取当前位置（用浏览器原生定位）
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lng = pos.coords.longitude
+            const lat = pos.coords.latitude
             map.setCenter([lng, lat])
             this.setMarker(lng, lat)
             this.reverseGeocode(lng, lat)
-          }
-        })
-      })
+          },
+          (err) => {
+            console.log('定位失败:', err)
+            // 失败时用默认位置
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        )
+      }
 
       // 加载搜索插件
       AMap.plugin('AMap.PlaceSearch', () => {
