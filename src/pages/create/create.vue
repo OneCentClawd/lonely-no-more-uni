@@ -380,6 +380,7 @@ export default {
       },
 
     onChooseLocation() {
+    // #ifdef MP-WEIXIN
     uni.chooseLocation({
       success: (res) => {
         this.address = res.name || res.address
@@ -388,19 +389,27 @@ export default {
       },
       fail: (err) => {
         console.log('chooseLocation fail:', err)
-        // 开发环境可能没有定位权限，提供手动输入
-        uni.showModal({
-          title: '选择地点',
-          editable: true,
-          placeholderText: '请输入活动地点',
-          success: (res) => {
-            if (res.confirm && res.content) {
-              this.address = res.content
-              this.latitude = 39.9
-              this.longitude = 116.4
-            }
-          }
-        })
+        this.showAddressInput()
+      }
+    })
+    // #endif
+    // #ifndef MP-WEIXIN
+    this.showAddressInput()
+    // #endif
+      },
+
+    showAddressInput() {
+    uni.showModal({
+      title: '输入活动地点',
+      editable: true,
+      placeholderText: '请输入详细地址',
+      success: (res) => {
+        if (res.confirm && res.content) {
+          this.address = res.content
+          // H5 暂不支持精确定位，用默认坐标
+          this.latitude = 39.9
+          this.longitude = 116.4
+        }
       }
     })
       },
