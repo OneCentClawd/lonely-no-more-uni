@@ -54,14 +54,6 @@
                         "appkey_android" : "8d18232c4c0126e700f67a35097c7e9c"
                     }
                 }
-            },
-            "icons" : {
-                "android" : {
-                    "hdpi" : "static/icons/72x72.png",
-                    "xhdpi" : "static/icons/96x96.png",
-                    "xxhdpi" : "static/icons/144x144.png",
-                    "xxxhdpi" : "static/icons/192x192.png"
-                }
             }
         }
     },
