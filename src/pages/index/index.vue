@@ -529,6 +529,7 @@ export default {
       },
 
     onChooseLocation() {
+    // #ifdef MP-WEIXIN
     uni.chooseLocation({
       success: (res) => {
         const name = res.name || res.address || '已选位置'
@@ -545,6 +546,13 @@ export default {
         }
       }
     })
+    // #endif
+    // #ifndef MP-WEIXIN
+    // H5: 跳转到高德地图选点页面
+    uni.navigateTo({
+      url: '/pages/map-picker/map-picker?from=index'
+    })
+    // #endif
       },
 
     onSelectDistance(index) {
@@ -603,6 +611,8 @@ export default {
   display: flex;
   align-items: center;
   flex: 1;
+  max-width: 200rpx;
+  overflow: hidden;
 }
 
 .location-icon {
