@@ -322,9 +322,7 @@ export default {
         uni.hideLoading()
         if (res.statusCode === 200) {
           uni.showToast({ title: '保存成功', icon: 'success' })
-          /* TODO: this.setData({
-            'user.nickname': nickname
-          }) */
+          this.user.nickname = nickname
           // 更新全局用户信息
           if (app.globalData.userInfo) {
             app.globalData.userInfo.nickname = nickname
