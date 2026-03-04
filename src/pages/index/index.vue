@@ -278,6 +278,7 @@ export default {
 
   methods: {
     getLocation() {
+    // #ifdef MP-WEIXIN
     uni.getLocation({
       type: 'gcj02',
       success: (res) => {
@@ -288,15 +289,42 @@ export default {
         this.loadActivities()
       },
       fail: () => {
-        // 定位失败，使用默认位置（北京）
-        app.updateLocation(39.9042, 116.4074, '北京')
-        this.latitude = 39.9042
-        this.longitude = 116.4074
-        this.locationName = '北京'
-        this.loadActivities()
-        uni.showToast({ title: '定位失败，显示北京', icon: 'none' })
+        this.useDefaultLocation()
       }
     })
+    // #endif
+    // #ifndef MP-WEIXIN
+    // H5: 用浏览器原生定位
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude
+          const lng = pos.coords.longitude
+          app.updateLocation(lat, lng, '当前位置')
+          this.latitude = lat
+          this.longitude = lng
+          this.locationName = '当前位置'
+          this.loadActivities()
+        },
+        () => {
+          this.useDefaultLocation()
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      )
+    } else {
+      this.useDefaultLocation()
+    }
+    // #endif
+      },
+
+    useDefaultLocation() {
+    // 定位失败，使用默认位置（北京）
+    app.updateLocation(39.9042, 116.4074, '北京')
+    this.latitude = 39.9042
+    this.longitude = 116.4074
+    this.locationName = '北京'
+    this.loadActivities()
+    uni.showToast({ title: '定位失败，显示北京', icon: 'none' })
       },
 
     loadActivities() {
