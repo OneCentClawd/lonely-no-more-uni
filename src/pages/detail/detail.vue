@@ -189,46 +189,54 @@ const categoryIcons = {
   '其他': '💡'
 }
 
-
 export default {
   data() {
     return {
-    activityId: null,
-    activity: null,
-    loading: true,
-    isJoined: false,
-    isCreator: false,
-    isFull: false,
-    isExpired: false,
-    joining: false,
-    photos: [],
-    userId: null,
-    showPoster: false,
-    posterImage: ''
+      activityId: null,
+      activity: null,
+      loading: true,
+      isJoined: false,
+      isCreator: false,
+      isFull: false,
+      isExpired: false,
+      joining: false,
+      photos: [],
+      userId: null,
+      showPoster: false,
+      posterImage: ''
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad(options) {
     this.activityId = options.id
-        this.userId = app.globalData.userId
+    this.userId = app.globalData.userId
     this.loadActivity()
-  },
+    },
 
   onShow() {
     if (this.activityId) {
       this.loadActivity()
       this.loadPhotos()
     }
-  },
+    },
 
   onPullDownRefresh() {
     this.loadActivity().then(() => {
       uni.stopPullDownRefresh()
     })
-  },
+    },
 
-  loadActivity() {
+  onShareAppMessage() {
+    const { activity, activityId } = this.data
+    return {
+      title: activity ? `${activity.title} - ${activity.currentMembers}/${activity.maxMembers}人` : '一起来参加活动吧',
+      path: `/pages/detail/detail?id=${activityId}`,
+      imageUrl: activity && activity.coverImage ? activity.coverImage : ''
+    }
+    },
+
+  methods: {
+    loadActivity() {
     const { activityId } = this.data
     this.loading = true
 
@@ -285,9 +293,9 @@ export default {
       }
     })
   })
-  },
+      },
 
-  formatTime(timeStr) {
+    formatTime(timeStr) {
     if (!timeStr) return ''
     const date = new Date(timeStr)
     const now = new Date()
@@ -302,18 +310,18 @@ export default {
     }
     
     return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-  },
+      },
 
-  onMemberTap(e) {
+    onMemberTap(e) {
     const userId = e.currentTarget.dataset.userid
     if (userId) {
       uni.navigateTo({
         url: `/pages/user/user?id=${userId}`
       })
     }
-  },
+      },
 
-  onJoin() {
+    onJoin() {
     if (!app.globalData.userId) {
       uni.showToast({ title: '请先登录', icon: 'none' })
       return
@@ -334,9 +342,9 @@ export default {
         this.doJoin()
       }
     })
-  },
+      },
 
-  doJoin() {
+    doJoin() {
     uni.request({
       url: `${app.globalData.baseUrl}/activity/${this.activityId}/join`,
       method: 'POST',
@@ -356,9 +364,9 @@ export default {
         this.joining = false
       }
     })
-  },
+      },
 
-  onLeave() {
+    onLeave() {
     uni.showModal({
       title: '确认退出',
       content: '确定要退出这个活动吗？',
@@ -383,9 +391,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onCancel() {
+    onCancel() {
     uni.showModal({
       title: '确认取消',
       content: '确定要取消这个活动吗？取消后无法恢复。',
@@ -412,9 +420,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onSaveTemplate() {
+    onSaveTemplate() {
     uni.showModal({
       title: '保存为模板',
       editable: true,
@@ -443,21 +451,21 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onChat() {
+    onChat() {
     uni.navigateTo({
       url: `/pages/chat/chat?id=${this.activityId}`
     })
-  },
+      },
 
-  onReview() {
+    onReview() {
     uni.navigateTo({
       url: `/pages/review/review?activityId=${this.activityId}`
     })
-  },
+      },
 
-  onPreviewCover() {
+    onPreviewCover() {
     const { activity } = this.data
     if (activity && activity.coverImage) {
       uni.previewImage({
@@ -465,10 +473,9 @@ export default {
         urls: [activity.coverImage]
       })
     }
-  },
+      },
 
-  // 活动相册相关
-  loadPhotos() {
+    loadPhotos() {
     const { activityId } = this.data
     uni.request({
       url: `${app.globalData.baseUrl}/activity/${activityId}/photos`,
@@ -478,9 +485,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onUploadPhoto() {
+    onUploadPhoto() {
     uni.chooseMedia({
       count: 9,
       mediaType: ['image'],
@@ -529,18 +536,18 @@ export default {
         })
       }
     })
-  },
+      },
 
-  onPreviewPhoto(e) {
+    onPreviewPhoto(e) {
     const index = e.currentTarget.dataset.index
     const urls = this.photos.map(p => p.imageUrl)
     uni.previewImage({
       current: urls[index],
       urls: urls
     })
-  },
+      },
 
-  onDeletePhoto(e) {
+    onDeletePhoto(e) {
     const photoId = e.currentTarget.dataset.id
     uni.showModal({
       title: '删除照片',
@@ -559,9 +566,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onOpenLocation() {
+    onOpenLocation() {
     const { activity } = this.data
     if (activity && activity.latitude && activity.longitude) {
       uni.openLocation({
@@ -571,27 +578,18 @@ export default {
         scale: 15
       })
     }
-  },
+      },
 
-  onShareAppMessage() {
-    const { activity, activityId } = this.data
-    return {
-      title: activity ? `${activity.title} - ${activity.currentMembers}/${activity.maxMembers}人` : '一起来参加活动吧',
-      path: `/pages/detail/detail?id=${activityId}`,
-      imageUrl: activity && activity.coverImage ? activity.coverImage : ''
-    }
-  },
-
-  onShareTimeline() {
+    onShareTimeline() {
     const { activity, activityId } = this.data
     return {
       title: activity ? `${activity.title} - 快来一起参加！` : '一起来参加活动吧',
       query: `id=${activityId}`,
       imageUrl: activity && activity.coverImage ? activity.coverImage : ''
     }
-  },
+      },
 
-  onSharePoster() {
+    onSharePoster() {
     uni.showLoading({ title: '生成海报中...' })
     
     uni.request({
@@ -600,7 +598,7 @@ export default {
         uni.hideLoading()
         if (res.statusCode === 200 && res.data.poster) {
           this.showPoster = true
-        this.posterImage = res.data.poster
+          this.posterImage = res.data.poster
         } else {
           uni.showToast({ title: '生成失败', icon: 'none' })
         }
@@ -610,14 +608,14 @@ export default {
         uni.showToast({ title: '网络错误', icon: 'none' })
       }
     })
-  },
+      },
 
-  onClosePoster() {
+    onClosePoster() {
     this.showPoster = false
     this.posterImage = ''
-  },
+      },
 
-  onSavePoster() {
+    onSavePoster() {
     const { posterImage } = this.data
     if (!posterImage) return
 
@@ -649,9 +647,9 @@ export default {
         uni.showToast({ title: '保存失败', icon: 'none' })
       }
     })
-  },
+      },
 
-  onReport() {
+    onReport() {
     if (!app.globalData.userId) {
       uni.showToast({ title: '请先登录', icon: 'none' })
       return
@@ -676,9 +674,9 @@ export default {
         })
       }
     })
-  },
+      },
 
-  submitReport(reportedUserId, reason) {
+    submitReport(reportedUserId, reason) {
     uni.request({
       url: `${app.globalData.baseUrl}/report`,
       method: 'POST',
@@ -702,6 +700,7 @@ export default {
         uni.showToast({ title: '网络错误', icon: 'none' })
       }
     })
+      }
   }
 }
 

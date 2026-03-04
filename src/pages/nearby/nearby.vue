@@ -53,38 +53,37 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    users: [],
-    loading: true,
-    latitude: null,
-    longitude: null,
-    radiusOptions: [
+      users: [],
+      loading: true,
+      latitude: null,
+      longitude: null,
+      radiusOptions: [
       { label: '1公里', value: 1 },
       { label: '5公里', value: 5 },
       { label: '10公里', value: 10 },
       { label: '20公里', value: 20 },
       { label: '50公里', value: 50 }
-    ],
-    radiusIndex: 2  // 默认10公里
+      ],
+      radiusIndex: 2  // 默认10公里
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     // 优先使用全局位置
     if (app.globalData.latitude && app.globalData.longitude) {
       this.latitude = app.globalData.latitude
-        this.longitude = app.globalData.longitude
+      this.longitude = app.globalData.longitude
       this.loadNearbyUsers()
     } else {
       this.getLocation()
     }
-  },
+    },
 
-  getLocation() {
+  methods: {
+    getLocation() {
     uni.getLocation({
       type: 'gcj02',
       success: (res) => {
@@ -100,15 +99,15 @@ export default {
         uni.showToast({ title: '定位失败，显示北京附近', icon: 'none' })
       }
     })
-  },
+      },
 
-  onRadiusChange(e) {
+    onRadiusChange(e) {
     this.radiusIndex = e.detail.value
     this.loading = true
     this.loadNearbyUsers()
-  },
+      },
 
-  loadNearbyUsers() {
+    loadNearbyUsers() {
     const { latitude, longitude, radiusOptions, radiusIndex } = this.data
     if (!latitude || !longitude) return
 
@@ -128,13 +127,14 @@ export default {
         this.loading = false
       }
     })
-  },
+      },
 
-  onUserTap(e) {
+    onUserTap(e) {
     const userId = e.currentTarget.dataset.userid
     uni.navigateTo({
       url: `/pages/user/user?id=${userId}`
     })
+      }
   }
 }
 

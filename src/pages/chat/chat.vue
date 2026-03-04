@@ -119,36 +119,49 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    activityId: null,
-    activityTitle: '',
-    memberCount: 0,
-    members: [],
-    showMembersModal: false,
-    messages: [],
-    inputValue: '',
-    scrollToMessage: '',
-    socketOpen: false,
-    connecting: false,
-    loading: false,
-    keyboardHeight: 0
+      activityId: null,
+      activityTitle: '',
+      memberCount: 0,
+      members: [],
+      showMembersModal: false,
+      messages: [],
+      inputValue: '',
+      scrollToMessage: '',
+      socketOpen: false,
+      connecting: false,
+      loading: false,
+      keyboardHeight: 0
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad(options) {
     this.activityId = options.id
     this.loadActivityInfo()
     this.loadHistory()
     this.connectWebSocket()
     this.requestSubscribe()
-  },
+    },
 
-  // 请求订阅消息授权
-  requestSubscribe() {
+  onUnload() {
+    this.closeWebSocket()
+    },
+
+  onShow() {
+    // 如果断开了，重新连接
+    if (!this.socketOpen && !this.connecting) {
+      this.connectWebSocket()
+    }
+    },
+
+  onHide() {
+    // 页面隐藏时不断开，保持连接
+    },
+
+  methods: {
+    requestSubscribe() {
     uni.requestSubscribeMessage({
       tmplIds: [
         '7jNoIpIxLkqpXDZZ4NDL1OcdZ6b_UQ4qOy5JrTjjyyA',  // 新消息提醒
@@ -162,24 +175,9 @@ export default {
         console.log('订阅消息授权失败:', err)
       }
     })
-  },
+      },
 
-  onUnload() {
-    this.closeWebSocket()
-  },
-
-  onShow() {
-    // 如果断开了，重新连接
-    if (!this.socketOpen && !this.connecting) {
-      this.connectWebSocket()
-    }
-  },
-
-  onHide() {
-    // 页面隐藏时不断开，保持连接
-  },
-
-  loadActivityInfo() {
+    loadActivityInfo() {
     const { activityId } = this.data
     uni.request({
       url: `${app.globalData.baseUrl}/activity/${activityId}`,
@@ -190,16 +188,16 @@ export default {
           const members = data.members || []
           const title = activity.title || '群聊'
           this.activityTitle = title
-        this.memberCount = members.length || activity.currentMembers || 0
-        this.members = members
+          this.memberCount = members.length || activity.currentMembers || 0
+          this.members = members
           // 设置导航栏标题为活动名称
           uni.setNavigationBarTitle({ title })
         }
       }
     })
-  },
+      },
 
-  loadHistory() {
+    loadHistory() {
     const { activityId } = this.data
     uni.request({
       url: `${app.globalData.baseUrl}/chat/${activityId}/history`,
@@ -208,15 +206,16 @@ export default {
         if (res.statusCode === 200 && Array.isArray(res.data)) {
           const myUserId = parseInt(app.globalData.userId)
           const messages = this.processMessages(res.data, myUserId)
-          this.scrollToMessage = messages.length > 0 ? `msg-${messages[messages.length - 1].id
+          this.messages = messages
+          this.scrollToMessage = messages.length > 0 ? `msg-${messages[messages.length - 1].id}` : ''
           // 标记所有消息已读
           this.markAllAsRead()
         }
       }
     })
-  },
+      },
 
-  processMessages(rawMessages, myUserId) {
+    processMessages(rawMessages, myUserId) {
     let lastTime = null
     return rawMessages.map((msg, index) => {
       const senderId = parseInt(msg.senderId)
@@ -250,9 +249,9 @@ export default {
         timeDividerText
       }
     })
-  },
+      },
 
-  formatTimeDivider(date) {
+    formatTimeDivider(date) {
     const now = new Date()
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const msgDay = new Date(date.getFullYear(), date.getMonth(), date.getDate())
@@ -270,18 +269,18 @@ export default {
       const day = date.getDate().toString().padStart(2, '0')
       return `${month}-${day} ${h}:${m}`
     }
-  },
+      },
 
-  markAllAsRead() {
+    markAllAsRead() {
     const { activityId } = this.data
     uni.request({
       url: `${app.globalData.baseUrl}/chat/${activityId}/read-all`,
       method: 'PUT',
       header: { 'X-User-Id': app.globalData.userId }
     })
-  },
+      },
 
-  connectWebSocket() {
+    connectWebSocket() {
     if (!app.globalData.userId) {
       uni.showToast({ title: '请先登录', icon: 'none' })
       return
@@ -338,8 +337,8 @@ export default {
           timeDividerText
         }
         console.log('WebSocket消息 - senderId:', senderId, 'myUserId:', myUserId, 'isMine:', senderId === myUserId)
-        this.messages = [...this.messages
-        this.scrollToMessage = `msg-${msg.id
+        this.messages = [...this.messages, newMessage]
+        this.scrollToMessage = `msg-${msg.id}`
         
         // 非自己的消息自动标记已读
         if (senderId !== myUserId && msg.id) {
@@ -371,9 +370,9 @@ export default {
       this.connecting = false
       uni.showToast({ title: '连接失败', icon: 'none' })
     })
-  },
+      },
 
-  closeWebSocket() {
+    closeWebSocket() {
     if (this.socketOpen) {
       uni.sendSocketMessage({
         data: JSON.stringify({
@@ -385,34 +384,34 @@ export default {
       uni.closeSocket()
       this.socketOpen = false
     }
-  },
+      },
 
-  onShowMembers() {
+    onShowMembers() {
     this.showMembersModal = true
-  },
+      },
 
-  onHideMembers() {
+    onHideMembers() {
     this.showMembersModal = false
-  },
+      },
 
-  onMemberTap(e) {
+    onMemberTap(e) {
     const userId = e.currentTarget.dataset.userid
     this.showMembersModal = false
     uni.navigateTo({
       url: `/pages/user/user?id=${userId}`
     })
-  },
+      },
 
-  onAvatarTap(e) {
+    onAvatarTap(e) {
     const userId = e.currentTarget.dataset.userid
     if (userId) {
       uni.navigateTo({
         url: `/pages/user/user?id=${userId}`
       })
     }
-  },
+      },
 
-  onInputFocus(e) {
+    onInputFocus(e) {
     this.keyboardHeight = e.detail.height || 0
     // 滚动到底部
     setTimeout(() => {
@@ -421,17 +420,17 @@ export default {
         this.scrollToMessage = 'msg-' + lastMsg.id
       }
     }, 100)
-  },
+      },
 
-  onInputBlur() {
+    onInputBlur() {
     this.keyboardHeight = 0
-  },
+      },
 
-  onInput(e) {
+    onInput(e) {
     this.inputValue = e.detail.value
-  },
+      },
 
-  onSend() {
+    onSend() {
     const content = this.inputValue.trim()
     if (!content) return
 
@@ -454,9 +453,9 @@ export default {
       uni.showToast({ title: '连接已断开', icon: 'none' })
       this.connectWebSocket()
     }
-  },
+      },
 
-  formatTime(timeStr) {
+    formatTime(timeStr) {
     if (!timeStr) return ''
     // 后端返回的是 UTC 时间，JS Date 会自动转换为本地时区
     let date
@@ -469,9 +468,9 @@ export default {
     const h = date.getHours().toString().padStart(2, '0')
     const m = date.getMinutes().toString().padStart(2, '0')
     return `${h}:${m}`
-  },
+      },
 
-  onChooseImage() {
+    onChooseImage() {
     uni.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -514,9 +513,9 @@ export default {
         })
       }
     })
-  },
+      },
 
-  onPreviewImage(e) {
+    onPreviewImage(e) {
     const url = e.currentTarget.dataset.url
     if (url) {
       uni.previewImage({
@@ -524,6 +523,7 @@ export default {
         current: url
       })
     }
+      }
   }
 }
 

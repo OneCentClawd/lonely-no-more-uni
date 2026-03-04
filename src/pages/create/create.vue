@@ -177,31 +177,29 @@ const categories = [
   { name: '其他', icon: '💡' }
 ]
 
-
 export default {
   data() {
     return {
-    categories,
-    selectedCategory: null,
-    title: '',
-    description: '',
-    coverImage: '',
-    address: '',
-    latitude: null,
-    longitude: null,
-    maxMembers: 4,
-    dateIndex: 0,
-    timeIndex: 0,
-    feeType: 'free',
-    feeAmount: '',
-    dates: [],
-    times: [],
-    submitting: false,
-    templates: []
+      categories,
+      selectedCategory: null,
+      title: '',
+      description: '',
+      coverImage: '',
+      address: '',
+      latitude: null,
+      longitude: null,
+      maxMembers: 4,
+      dateIndex: 0,
+      timeIndex: 0,
+      feeType: 'free',
+      feeAmount: '',
+      dates: [],
+      times: [],
+      submitting: false,
+      templates: []
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad(options) {
     this.initDateTime()
     this.loadTemplates()
@@ -210,7 +208,7 @@ export default {
     if (options.templateId) {
       this.loadAndApplyTemplate(options.templateId)
     }
-  },
+    },
 
   onShow() {
     // 从模板页跳转过来时，从 storage 读取模板ID
@@ -219,9 +217,10 @@ export default {
       uni.removeStorageSync('useTemplateId')
       this.loadAndApplyTemplate(templateId)
     }
-  },
+    },
 
-  loadAndApplyTemplate(templateId) {
+  methods: {
+    loadAndApplyTemplate(templateId) {
     const userId = app.globalData.userId
     if (!userId) return
     
@@ -235,23 +234,23 @@ export default {
           const categoryIndex = categories.findIndex(c => c.name === t.category)
           
           this.selectedCategory = categoryIndex >= 0 ? categoryIndex : null
-        this.title = t.title || ''
-        this.description = t.description || ''
-        this.coverImage = t.coverImage || ''
-        this.address = t.address || ''
-        this.latitude = t.latitude
-        this.longitude = t.longitude
-        this.maxMembers = t.maxMembers || 4
-        this.feeType = t.feeType || 'free'
-        this.feeAmount = t.feeAmount ? String(t.feeAmount) : ''
+          this.title = t.title || ''
+          this.description = t.description || ''
+          this.coverImage = t.coverImage || ''
+          this.address = t.address || ''
+          this.latitude = t.latitude
+          this.longitude = t.longitude
+          this.maxMembers = t.maxMembers || 4
+          this.feeType = t.feeType || 'free'
+          this.feeAmount = t.feeAmount ? String(t.feeAmount) : ''
           
           uni.showToast({ title: '已应用模板', icon: 'success' })
         }
       }
     })
-  },
+      },
 
-  loadTemplates() {
+    loadTemplates() {
     const userId = app.globalData.userId
     if (!userId) return
     
@@ -264,9 +263,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onTemplateTap(e) {
+    onTemplateTap(e) {
     const templateId = e.currentTarget.dataset.id
     const userId = app.globalData.userId
     
@@ -281,23 +280,23 @@ export default {
           const categoryIndex = categories.findIndex(c => c.name === t.category)
           
           this.selectedCategory = categoryIndex >= 0 ? categoryIndex : null
-        this.title = t.title || ''
-        this.description = t.description || ''
-        this.coverImage = t.coverImage || ''
-        this.address = t.address || ''
-        this.latitude = t.latitude
-        this.longitude = t.longitude
-        this.maxMembers = t.maxMembers || 4
-        this.feeType = t.feeType || 'free'
-        this.feeAmount = t.feeAmount ? String(t.feeAmount) : ''
+          this.title = t.title || ''
+          this.description = t.description || ''
+          this.coverImage = t.coverImage || ''
+          this.address = t.address || ''
+          this.latitude = t.latitude
+          this.longitude = t.longitude
+          this.maxMembers = t.maxMembers || 4
+          this.feeType = t.feeType || 'free'
+          this.feeAmount = t.feeAmount ? String(t.feeAmount) : ''
           
           uni.showToast({ title: '已应用模板', icon: 'success' })
         }
       }
     })
-  },
+      },
 
-  initDateTime() {
+    initDateTime() {
     const dates = []
     const now = new Date()
     
@@ -322,23 +321,24 @@ export default {
       times.push({ label: `${h}:30`, value: `${h.toString().padStart(2, '0')}:30:00` })
     }
 
-    Object.assign(this, { dates, times })
-  },
+    this.dates = dates
+    this.times = times
+      },
 
-  onCategoryTap(e) {
+    onCategoryTap(e) {
     const index = e.currentTarget.dataset.index
     this.selectedCategory = index
-  },
+      },
 
-  onTitleInput(e) {
+    onTitleInput(e) {
     this.title = e.detail.value
-  },
+      },
 
-  onDescInput(e) {
+    onDescInput(e) {
     this.description = e.detail.value
-  },
+      },
 
-  onChooseCover() {
+    onChooseCover() {
     const userId = app.globalData.userId
     if (!userId) {
       uni.showToast({ title: '请先登录', icon: 'none' })
@@ -377,13 +377,13 @@ export default {
         })
       }
     })
-  },
+      },
 
-  onDeleteCover() {
+    onDeleteCover() {
     this.coverImage = ''
-  },
+      },
 
-  onChooseLocation() {
+    onChooseLocation() {
     uni.chooseLocation({
       success: (res) => {
         this.address = res.name || res.address
@@ -400,48 +400,48 @@ export default {
           success: (res) => {
             if (res.confirm && res.content) {
               this.address = res.content
-              this.latitude = 39.9  // 默认北京坐标
+              this.latitude = 39.9
               this.longitude = 116.4
             }
           }
         })
       }
     })
-  },
+      },
 
-  onDateChange(e) {
+    onDateChange(e) {
     this.dateIndex = e.detail.value
-  },
+      },
 
-  onTimeChange(e) {
+    onTimeChange(e) {
     this.timeIndex = e.detail.value
-  },
+      },
 
-  onMembersMinus() {
+    onMembersMinus() {
     if (this.maxMembers > 2) {
       this.maxMembers = this.maxMembers - 1
     }
-  },
+      },
 
-  onMembersPlus() {
+    onMembersPlus() {
     if (this.maxMembers < 20) {
       this.maxMembers = this.maxMembers + 1
     }
-  },
+      },
 
-  onMemberChange(e) {
+    onMemberChange(e) {
     this.maxMembers = e.detail.value
-  },
+      },
 
-  onFeeTypeChange(e) {
+    onFeeTypeChange(e) {
     this.feeType = e.detail.value
-  },
+      },
 
-  onFeeAmountInput(e) {
+    onFeeAmountInput(e) {
     this.feeAmount = e.detail.value
-  },
+      },
 
-  onSubmit() {
+    onSubmit() {
     const { selectedCategory, title, address, latitude, longitude, maxMembers, dates, times, dateIndex, timeIndex, feeType, feeAmount, description, coverImage, submitting } = this.data
 
     if (submitting) return
@@ -527,6 +527,7 @@ export default {
         this.submitting = false
       }
     })
+      }
   }
 }
 

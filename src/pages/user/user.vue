@@ -142,22 +142,20 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    userId: null,
-    user: null,
-    activities: [],
-    reviews: [],
-    reviewStats: { positive: 0, negative: 0 },
-    loading: true,
-    isSelf: false,
-    isBlocked: false
+      userId: null,
+      user: null,
+      activities: [],
+      reviews: [],
+      reviewStats: { positive: 0, negative: 0 },
+      loading: true,
+      isSelf: false,
+      isBlocked: false
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad(options) {
     if (options.id) {
       const isSelf = options.id == app.globalData.userId
@@ -170,9 +168,10 @@ export default {
         this.checkBlocked(options.id)
       }
     }
-  },
+    },
 
-  loadUser(userId) {
+  methods: {
+    loadUser(userId) {
     uni.request({
       url: `${app.globalData.baseUrl}/user/${userId}`,
       success: (res) => {
@@ -220,9 +219,9 @@ export default {
         uni.showToast({ title: '加载失败', icon: 'none' })
       }
     })
-  },
+      },
 
-  loadActivities(userId) {
+    loadActivities(userId) {
     uni.request({
       url: `${app.globalData.baseUrl}/user/${userId}/activities`,
       success: (res) => {
@@ -246,13 +245,13 @@ export default {
             item.statusType = s.type
             return item
           })
-          Object.assign(this, { activities })
+          this.activities = activities
         }
       }
     })
-  },
+      },
 
-  loadReviews(userId) {
+    loadReviews(userId) {
     // 加载评价列表
     uni.request({
       url: `${app.globalData.baseUrl}/review/user/${userId}`,
@@ -267,23 +266,22 @@ export default {
       url: `${app.globalData.baseUrl}/review/user/${userId}/stats`,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.reviewStats = res.data || { positive: 0
-        this.negative = 0
+          this.reviewStats = res.data || { positive: 0, negative: 0 }
         }
       }
     })
-  },
+      },
 
-  onPreviewAvatar() {
+    onPreviewAvatar() {
     if (this.user && this.user.avatar) {
       uni.previewImage({
         urls: [this.user.avatar],
         current: this.user.avatar
       })
     }
-  },
+      },
 
-  onPreviewPhoto(e) {
+    onPreviewPhoto(e) {
     const index = e.currentTarget.dataset.index
     const photos = this.user.photos
     if (photos && photos.length > 0) {
@@ -292,16 +290,16 @@ export default {
         current: photos[index]
       })
     }
-  },
+      },
 
-  onActivityTap(e) {
+    onActivityTap(e) {
     const id = e.currentTarget.dataset.id
     uni.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
-  },
+      },
 
-  checkBlocked(userId) {
+    checkBlocked(userId) {
     uni.request({
       url: `${app.globalData.baseUrl}/blacklist/check/${userId}`,
       header: { 'X-User-Id': app.globalData.userId },
@@ -311,9 +309,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onReport() {
+    onReport() {
     const reasons = ['骚扰', '虚假信息', '色情低俗', '人身攻击', '其他']
     const reasonKeys = ['harassment', 'fake_info', 'inappropriate', 'attack', 'other']
     
@@ -346,9 +344,9 @@ export default {
         })
       }
     })
-  },
+      },
 
-  onBlock() {
+    onBlock() {
     if (this.isBlocked) {
       uni.showToast({ title: '已拉黑', icon: 'none' })
       return
@@ -384,6 +382,7 @@ export default {
         }
       }
     })
+      }
   }
 }
 

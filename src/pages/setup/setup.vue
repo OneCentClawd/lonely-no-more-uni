@@ -138,29 +138,27 @@ const zodiacSigns = [
   { name: '摩羯座', start: [12, 22], end: [1, 19] }
 ]
 
-
 export default {
   data() {
     return {
-    avatar: '/images/default-avatar.jpg',
-    nickname: '',
-    gender: 0, // 0未知 1男 2女
-    birthday: '',
-    zodiac: '',
-    bio: '',
-    photos: [],
-    selectedInterests: [],
-    selectedMap: {}, // { '运动健身': true, '看电影': true }
-    interestOptions,
-    submitting: false,
-    isEdit: false
+      avatar: '/images/default-avatar.jpg',
+      nickname: '',
+      gender: 0, // 0未知 1男 2女
+      birthday: '',
+      zodiac: '',
+      bio: '',
+      photos: [],
+      selectedInterests: [],
+      selectedMap: {}, // { '运动健身': true, '看电影': true }
+      interestOptions,
+      submitting: false,
+      isEdit: false
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad(options) {
     const isEdit = options.mode === 'edit'
-    Object.assign(this, { isEdit })
+    this.isEdit = isEdit
     
     // 预填已有信息
     const userInfo = app.globalData.userInfo
@@ -170,18 +168,19 @@ export default {
       interests.forEach(item => selectedMap[item] = true)
       
       this.avatar = userInfo.avatar || '/images/default-avatar.jpg'
-        this.nickname = userInfo.nickname || ''
-        this.gender = userInfo.gender || 0
-        this.selectedInterests = interests
-        this.selectedMap = selectedMap
-        this.birthday = userInfo.birthday || ''
-        this.zodiac = userInfo.zodiac || ''
-        this.bio = userInfo.bio || ''
-        this.photos = userInfo.photos ? JSON.parse(userInfo.photos) : []
+      this.nickname = userInfo.nickname || ''
+      this.gender = userInfo.gender || 0
+      this.selectedInterests = interests
+      this.selectedMap = selectedMap
+      this.birthday = userInfo.birthday || ''
+      this.zodiac = userInfo.zodiac || ''
+      this.bio = userInfo.bio || ''
+      this.photos = userInfo.photos ? JSON.parse(userInfo.photos) : []
     }
-  },
+    },
 
-  onChooseAvatar() {
+  methods: {
+    onChooseAvatar() {
     uni.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -194,9 +193,9 @@ export default {
         this.uploadAvatar(tempFilePath)
       }
     })
-  },
+      },
 
-  uploadAvatar(filePath) {
+    uploadAvatar(filePath) {
     uni.showLoading({ title: '上传中...' })
     
     uni.uploadFile({
@@ -224,23 +223,24 @@ export default {
         uni.showToast({ title: '上传失败', icon: 'none' })
       }
     })
-  },
+      },
 
-  onNicknameInput(e) {
+    onNicknameInput(e) {
     this.nickname = e.detail.value
-  },
+      },
 
-  onGenderChange(e) {
+    onGenderChange(e) {
     this.gender = parseInt(e.detail.value)
-  },
+      },
 
-  onBirthdayChange(e) {
+    onBirthdayChange(e) {
     const birthday = e.detail.value
     const zodiac = this.getZodiac(birthday)
-    Object.assign(this, { birthday, zodiac })
-  },
+    this.birthday = birthday
+    this.zodiac = zodiac
+      },
 
-  getZodiac(dateStr) {
+    getZodiac(dateStr) {
     if (!dateStr) return ''
     const parts = dateStr.split('-')
     const month = parseInt(parts[1])
@@ -267,13 +267,13 @@ export default {
       }
     }
     return ''
-  },
+      },
 
-  onBioInput(e) {
+    onBioInput(e) {
     this.bio = e.detail.value
-  },
+      },
 
-  onInterestTap(e) {
+    onInterestTap(e) {
     const interest = e.currentTarget.dataset.interest
     let { selectedInterests, selectedMap } = this.data
     
@@ -292,10 +292,11 @@ export default {
       selectedMap = { ...selectedMap, [interest]: true }
     }
     
-    Object.assign(this, { selectedInterests, selectedMap })
-  },
+    this.selectedInterests = selectedInterests
+    this.selectedMap = selectedMap
+      },
 
-  onAddPhoto() {
+    onAddPhoto() {
     const { photos } = this.data
     if (photos.length >= 9) {
       uni.showToast({ title: '最多上传9张照片', icon: 'none' })
@@ -313,9 +314,9 @@ export default {
         })
       }
     })
-  },
+      },
 
-  uploadPhoto(filePath) {
+    uploadPhoto(filePath) {
     uni.showLoading({ title: '上传中...' })
     uni.uploadFile({
       url: `${app.globalData.baseUrl}/file/upload?type=photo`,
@@ -328,7 +329,7 @@ export default {
         const data = JSON.parse(res.data)
         if (data.url) {
           const photos = [...this.photos, data.url]
-          Object.assign(this, { photos })
+          this.photos = photos
         }
       },
       fail: () => {
@@ -338,17 +339,17 @@ export default {
         uni.hideLoading()
       }
     })
-  },
+      },
 
-  onPreviewPhoto(e) {
+    onPreviewPhoto(e) {
     const index = e.currentTarget.dataset.index
     uni.previewImage({
       urls: this.photos,
       current: this.photos[index]
     })
-  },
+      },
 
-  onDeletePhoto(e) {
+    onDeletePhoto(e) {
     const index = e.currentTarget.dataset.index
     uni.showActionSheet({
       itemList: ['删除这张照片'],
@@ -356,13 +357,13 @@ export default {
         if (res.tapIndex === 0) {
           const photos = [...this.photos]
           photos.splice(index, 1)
-          Object.assign(this, { photos })
+          this.photos = photos
         }
       }
     })
-  },
+      },
 
-  onSubmit() {
+    onSubmit() {
     const { nickname, avatar, gender, birthday, zodiac, bio, photos, selectedInterests, submitting, isEdit } = this.data
     
     if (submitting) return
@@ -414,10 +415,11 @@ export default {
         this.submitting = false
       }
     })
-  },
+      },
 
-  onSkip() {
+    onSkip() {
     uni.switchTab({ url: '/pages/index/index' })
+      }
   }
 }
 

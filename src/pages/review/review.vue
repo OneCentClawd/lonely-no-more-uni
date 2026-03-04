@@ -58,26 +58,25 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    activityId: null,
-    members: [],
-    loading: true,
-    submitting: false
+      activityId: null,
+      members: [],
+      loading: true,
+      submitting: false
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad(options) {
     if (options.activityId) {
       this.activityId = options.activityId
       this.loadReviewableMembers()
     }
-  },
+    },
 
-  loadReviewableMembers() {
+  methods: {
+    loadReviewableMembers() {
     const { activityId } = this.data
     uni.request({
       url: `${app.globalData.baseUrl}/review/activity/${activityId}/reviewable`,
@@ -88,6 +87,7 @@ export default {
           selected: null,
           comment: ''
         }))
+        this.members = members
         this.loading = false
       },
       fail: () => {
@@ -95,9 +95,9 @@ export default {
         uni.showToast({ title: '加载失败', icon: 'none' })
       }
     })
-  },
+      },
 
-  onRatingTap(e) {
+    onRatingTap(e) {
     const { index, rating } = e.currentTarget.dataset
     const members = this.members
     // 如果点击已选中的，取消选择
@@ -106,17 +106,17 @@ export default {
     } else {
       members[index].selected = rating
     }
-    Object.assign(this, { members })
-  },
+    this.members = members
+      },
 
-  onCommentInput(e) {
+    onCommentInput(e) {
     const { index } = e.currentTarget.dataset
     const members = this.members
     members[index].comment = e.detail.value
-    Object.assign(this, { members })
-  },
+    this.members = members
+      },
 
-  onSubmit() {
+    onSubmit() {
     const { activityId, members } = this.data
     const toSubmit = members.filter(m => m.selected)
     
@@ -168,10 +168,11 @@ export default {
       .finally(() => {
         this.submitting = false
       })
-  },
+      },
 
-  onSkip() {
+    onSkip() {
     uni.navigateBack()
+      }
   }
 }
 

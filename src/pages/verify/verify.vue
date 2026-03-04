@@ -92,35 +92,34 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    realNameStatus: 0,  // 0未认证 1审核中 2已认证 3已拒绝
-    studentStatus: 0,
-    realNameStatusText: '未认证',
-    studentStatusText: '未认证',
-    realName: '',
-    idCard: '',
-    school: '',
-    studentCardImage: '',
-    realNameLast4: '',
-    verifiedSchool: '',
-    rejectReason: '',
-    submitting: false
+      realNameStatus: 0,  // 0未认证 1审核中 2已认证 3已拒绝
+      studentStatus: 0,
+      realNameStatusText: '未认证',
+      studentStatusText: '未认证',
+      realName: '',
+      idCard: '',
+      school: '',
+      studentCardImage: '',
+      realNameLast4: '',
+      verifiedSchool: '',
+      rejectReason: '',
+      submitting: false
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     this.loadStatus()
-  },
+    },
 
   onShow() {
     this.loadStatus()
-  },
+    },
 
-  loadStatus() {
+  methods: {
+    loadStatus() {
     const userId = app.globalData.userId
     if (!userId) return
 
@@ -131,35 +130,35 @@ export default {
         if (res.statusCode === 200) {
           const data = res.data
           this.realNameStatus = data.realNameStatus || 0
-        this.studentStatus = data.studentStatus || 0
-        this.realNameStatusText = this.getStatusText(data.realNameStatus || 0)
-        this.studentStatusText = this.getStatusText(data.studentStatus || 0)
-        this.realNameLast4 = data.realNameLast4 || ''
-        this.verifiedSchool = data.school || ''
-        this.rejectReason = data.rejectReason || ''
+          this.studentStatus = data.studentStatus || 0
+          this.realNameStatusText = this.getStatusText(data.realNameStatus || 0)
+          this.studentStatusText = this.getStatusText(data.studentStatus || 0)
+          this.realNameLast4 = data.realNameLast4 || ''
+          this.verifiedSchool = data.school || ''
+          this.rejectReason = data.rejectReason || ''
         }
       }
     })
-  },
+      },
 
-  getStatusText(status) {
+    getStatusText(status) {
     const texts = ['未认证', '审核中', '已认证', '已拒绝']
     return texts[status] || '未认证'
-  },
+      },
 
-  onRealNameInput(e) {
+    onRealNameInput(e) {
     this.realName = e.detail.value
-  },
+      },
 
-  onIdCardInput(e) {
+    onIdCardInput(e) {
     this.idCard = e.detail.value.toUpperCase()
-  },
+      },
 
-  onSchoolInput(e) {
+    onSchoolInput(e) {
     this.school = e.detail.value
-  },
+      },
 
-  uploadStudentCard() {
+    uploadStudentCard() {
     uni.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -185,9 +184,9 @@ export default {
         })
       }
     })
-  },
+      },
 
-  submitRealName() {
+    submitRealName() {
     const { realName, idCard } = this.data
     
     if (!realName.trim()) {
@@ -225,9 +224,9 @@ export default {
         this.submitting = false
       }
     })
-  },
+      },
 
-  submitStudent() {
+    submitStudent() {
     const { school, studentCardImage } = this.data
     
     if (!school.trim()) {
@@ -265,6 +264,7 @@ export default {
         this.submitting = false
       }
     })
+      }
   }
 }
 

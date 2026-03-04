@@ -91,10 +91,12 @@ function formatDistance(km) {
   return `${km.toFixed(1)}km`
 }
 
-module.exports = {
+export default {
   request,
   formatTime,
   formatRelativeTime,
   getDistance,
   formatDistance
 }
+
+export { request, formatTime, formatRelativeTime, getDistance, formatDistance }

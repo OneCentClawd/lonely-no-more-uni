@@ -31,25 +31,24 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    list: [],
-    loading: true
+      list: [],
+      loading: true
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     this.loadBlackList()
-  },
+    },
 
   onShow() {
     this.loadBlackList()
-  },
+    },
 
-  loadBlackList() {
+  methods: {
+    loadBlackList() {
     this.loading = true
     uni.request({
       url: `${app.globalData.baseUrl}/blacklist`,
@@ -60,6 +59,7 @@ export default {
             ...item,
             createdAtText: this.formatTime(item.createdAt)
           }))
+          this.list = list
           this.loading = false
         } else {
           this.loading = false
@@ -70,15 +70,15 @@ export default {
         uni.showToast({ title: '加载失败', icon: 'none' })
       }
     })
-  },
+      },
 
-  formatTime(timeStr) {
+    formatTime(timeStr) {
     if (!timeStr) return ''
     const date = new Date(timeStr)
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-  },
+      },
 
-  onUnblock(e) {
+    onUnblock(e) {
     const blockedUserId = e.currentTarget.dataset.id
     uni.showModal({
       title: '解除拉黑',
@@ -104,6 +104,7 @@ export default {
         }
       }
     })
+      }
   }
 }
 

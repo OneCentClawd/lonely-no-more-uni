@@ -161,7 +161,7 @@
 
 <script>
 const app = getApp()
-const util = require('../../utils/util')
+import util from '../../utils/util'
 
 const categories = [
   { name: '推荐', icon: '⭐', active: true },
@@ -203,39 +203,37 @@ const distanceOptions = [
   { label: '50km', value: 50 }
 ]
 
-
 export default {
   data() {
     return {
-    categories,
-    distanceOptions,
-    distanceIndex: 1, // 默认10km
-    activities: [],
-    loading: true,
-    latitude: null,
-    longitude: null,
-    locationName: '',
-    selectedCategory: '推荐',
-    searchKeyword: '',
-    isSearching: false,
-    showSearchPanel: false,
-    recentSearches: [],
-    hotSearches: []
+      categories,
+      distanceOptions,
+      distanceIndex: 1, // 默认10km
+      activities: [],
+      loading: true,
+      latitude: null,
+      longitude: null,
+      locationName: '',
+      selectedCategory: '推荐',
+      searchKeyword: '',
+      isSearching: false,
+      showSearchPanel: false,
+      recentSearches: [],
+      hotSearches: []
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     // 优先使用全局位置
     if (app.globalData.latitude && app.globalData.longitude) {
       this.latitude = app.globalData.latitude
-        this.longitude = app.globalData.longitude
-        this.locationName = app.globalData.locationName || '已保存位置'
+      this.longitude = app.globalData.longitude
+      this.locationName = app.globalData.locationName || '已保存位置'
       this.loadActivities()
     } else {
       this.getLocation()
     }
-  },
+    },
 
   onShow() {
     // 每次显示时检查全局位置是否变化
@@ -243,21 +241,29 @@ export default {
     const globalLng = app.globalData.longitude
     if (globalLat && globalLng && (globalLat !== this.latitude || globalLng !== this.longitude)) {
       this.latitude = globalLat
-        this.longitude = globalLng
-        this.locationName = app.globalData.locationName || '已选位置'
+      this.longitude = globalLng
+      this.locationName = app.globalData.locationName || '已选位置'
     }
     if (this.latitude) {
       this.loadActivities()
     }
-  },
+    },
 
   onPullDownRefresh() {
     this.loadActivities().then(() => {
       uni.stopPullDownRefresh()
     })
-  },
+    },
 
-  getLocation() {
+  onShareAppMessage() {
+    return {
+      title: '一起来找搭子吧！',
+      path: '/pages/index/index'
+    }
+    },
+
+  methods: {
+    getLocation() {
     uni.getLocation({
       type: 'gcj02',
       success: (res) => {
@@ -277,9 +283,9 @@ export default {
         uni.showToast({ title: '定位失败，显示北京', icon: 'none' })
       }
     })
-  },
+      },
 
-  loadActivities() {
+    loadActivities() {
     this.loading = true
     
     const { latitude, longitude, selectedCategory, distanceOptions, distanceIndex } = this.data
@@ -328,6 +334,7 @@ export default {
             isExpired: item.status >= 3
           }))
           
+          this.activities = activities
           this.loading = false
           resolve()
         },
@@ -339,17 +346,17 @@ export default {
         }
       })
     })
-  },
+      },
 
-  calculateDistance(lat, lng) {
+    calculateDistance(lat, lng) {
     const { latitude, longitude } = this.data
     if (!latitude || !longitude) return ''
     
     const km = util.getDistance(latitude, longitude, lat, lng)
     return util.formatDistance(km)
-  },
+      },
 
-  formatTime(timeStr) {
+    formatTime(timeStr) {
     if (!timeStr) return ''
     const date = new Date(timeStr)
     const now = new Date()
@@ -374,38 +381,39 @@ export default {
     
     // 其他显示日期
     return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-  },
+      },
 
-  onCategoryTap(e) {
+    onCategoryTap(e) {
     const index = e.currentTarget.dataset.index
     const categories = this.categories.map((item, i) => ({
       ...item,
       active: i === index
     }))
+    this.categories = categories
     this.selectedCategory = categories[index].name
-        this.searchKeyword = ''
-        this.isSearching = false
+    this.searchKeyword = ''
+    this.isSearching = false
     this.loadActivities()
-  },
+      },
 
-  onSearchInput(e) {
+    onSearchInput(e) {
     this.searchKeyword = e.detail.value
-  },
+      },
 
-  onSearchFocus() {
+    onSearchFocus() {
     // 获取搜索建议
     this.loadSearchSuggestions()
     this.showSearchPanel = true
-  },
+      },
 
-  onSearchBlur() {
+    onSearchBlur() {
     // 延迟隐藏，让点击事件先触发
     setTimeout(() => {
       this.showSearchPanel = false
     }, 200)
-  },
+      },
 
-  loadSearchSuggestions() {
+    loadSearchSuggestions() {
     const headers = {}
     if (app.globalData.userId) {
       headers['X-User-Id'] = app.globalData.userId
@@ -417,20 +425,20 @@ export default {
       success: (res) => {
         if (res.statusCode === 200) {
           this.recentSearches = res.data.recent || []
-        this.hotSearches = res.data.hot || []
+          this.hotSearches = res.data.hot || []
         }
       }
     })
-  },
+      },
 
-  onSuggestionTap(e) {
+    onSuggestionTap(e) {
     const keyword = e.currentTarget.dataset.keyword
     this.searchKeyword = keyword
-      this.showSearchPanel = false
+    this.showSearchPanel = false
     this.onSearch()
-  },
+      },
 
-  onClearHistory() {
+    onClearHistory() {
     const userId = app.globalData.userId
     if (!userId) return
     
@@ -443,9 +451,9 @@ export default {
         uni.showToast({ title: '已清空', icon: 'success' })
       }
     })
-  },
+      },
 
-  onSearch() {
+    onSearch() {
     const { searchKeyword } = this.data
     if (!searchKeyword.trim()) {
       this.isSearching = false
@@ -454,8 +462,8 @@ export default {
     }
     
     this.loading = true
-      this.isSearching = true
-      this.showSearchPanel = false
+    this.isSearching = true
+    this.showSearchPanel = false
     
     const headers = {}
     if (app.globalData.userId) {
@@ -485,6 +493,7 @@ export default {
           isExpired: item.status >= 3
         }))
         
+        this.activities = activities
         this.loading = false
       },
       fail: () => {
@@ -493,21 +502,21 @@ export default {
         uni.showToast({ title: '搜索失败', icon: 'none' })
       }
     })
-  },
+      },
 
-  onClearSearch() {
+    onClearSearch() {
     this.searchKeyword = ''
     this.isSearching = false
     this.loadActivities()
-  },
+      },
 
-  onNearbyPeople() {
+    onNearbyPeople() {
     uni.navigateTo({
       url: '/pages/nearby/nearby'
     })
-  },
+      },
 
-  onChooseLocation() {
+    onChooseLocation() {
     uni.chooseLocation({
       success: (res) => {
         const name = res.name || res.address || '已选位置'
@@ -524,40 +533,34 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onDistanceChange(e) {
+    onDistanceChange(e) {
     this.distanceIndex = e.detail.value
     this.loadActivities()
-  },
+      },
 
-  onActivityTap(e) {
+    onActivityTap(e) {
     const id = e.currentTarget.dataset.id
     uni.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
-  },
+      },
 
-  onCreatorTap(e) {
+    onCreatorTap(e) {
     const userId = e.currentTarget.dataset.userid
     if (userId) {
       uni.navigateTo({
         url: `/pages/user/user?id=${userId}`
       })
     }
-  },
+      },
 
-  goCreate() {
+    goCreate() {
     uni.switchTab({
       url: '/pages/create/create'
     })
-  },
-
-  onShareAppMessage() {
-    return {
-      title: '一起来找搭子吧！',
-      path: '/pages/index/index'
-    }
+      }
   }
 }
 

@@ -120,21 +120,19 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    isLoggedIn: false,
-    user: null,
-    myActivities: [],
-    activeTab: 0,
-    loading: true,
-    unreadCount: 0,
-    isVerified: false
+      isLoggedIn: false,
+      user: null,
+      myActivities: [],
+      activeTab: 0,
+      loading: true,
+      unreadCount: 0,
+      isVerified: false
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     // 检查登录状态
     const userId = app.globalData.userId
@@ -145,24 +143,7 @@ export default {
     } else {
       this.loading = false
     }
-  },
-
-  loadVerifyStatus() {
-    const userId = app.globalData.userId
-    if (!userId) return
-    
-    uni.request({
-      url: `${app.globalData.baseUrl}/verification/status`,
-      header: { 'X-User-Id': userId },
-      success: (res) => {
-        if (res.statusCode === 200) {
-          const { realNameStatus, studentStatus } = res.data
-          // 任一认证通过即为已认证
-          this.isVerified = realNameStatus === 2 || studentStatus === 2
-        }
-      }
-    })
-  },
+    },
 
   onShow() {
     // 每次显示页面时检查登录状态（可能从 setup 页面返回）
@@ -176,7 +157,7 @@ export default {
       this.loadUnreadCount()
       this.checkPendingReview()
     }
-  },
+    },
 
   onPullDownRefresh() {
     Promise.all([
@@ -191,9 +172,27 @@ export default {
     ]).then(() => {
       uni.stopPullDownRefresh()
     })
-  },
+    },
 
-  loadUser() {
+  methods: {
+    loadVerifyStatus() {
+    const userId = app.globalData.userId
+    if (!userId) return
+    
+    uni.request({
+      url: `${app.globalData.baseUrl}/verification/status`,
+      header: { 'X-User-Id': userId },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          const { realNameStatus, studentStatus } = res.data
+          // 任一认证通过即为已认证
+          this.isVerified = realNameStatus === 2 || studentStatus === 2
+        }
+      }
+    })
+      },
+
+    loadUser() {
     const userId = app.globalData.userId
     if (!userId) {
       this.loading = false
@@ -207,20 +206,21 @@ export default {
         if (res.statusCode === 200) {
           const user = res.data
           this.isLoggedIn = true
-        this.user = {
-              ...user
-        this.avatar = user.avatar || '/images/default-avatar.jpg'
-        this.nickname = user.nickname || '用户' + user.id
-        this.interests = user.interests ? JSON.parse(user.interests) : []
+          this.user = {
+              ...user,
+              avatar: user.avatar || '/images/default-avatar.jpg',
+              nickname: user.nickname || '用户' + user.id,
+              interests: user.interests ? JSON.parse(user.interests) : []
+            }
         }
       },
       complete: () => {
         this.loading = false
       }
     })
-  },
+      },
 
-  loadMyActivities() {
+    loadMyActivities() {
     const userId = app.globalData.userId
     if (!userId) return
 
@@ -255,9 +255,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  loadUnreadCounts(activities) {
+    loadUnreadCounts(activities) {
     const userId = app.globalData.userId
     if (!userId || !activities.length) return
     
@@ -267,15 +267,14 @@ export default {
         header: { 'X-User-Id': userId },
         success: (res) => {
           if (res.statusCode === 200 && res.data.count > 0) {
-            const key = `myActivities[${index}].unreadCount`
-            Object.assign(this, { [key]: res.data.count })
+            this.myActivities[index].unreadCount = res.data.count
           }
         }
       })
     })
-  },
+      },
 
-  formatTime(timeStr) {
+    formatTime(timeStr) {
     if (!timeStr) return ''
     const date = new Date(timeStr)
     const now = new Date()
@@ -290,26 +289,25 @@ export default {
     }
     
     return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-  },
+      },
 
-  onTabChange(e) {
-    this.activeTab = parseInt(e.currentTarget.dataset.index)
-  },
+    onTabChange(e) {
+    this.activeTab = parseInt(e.currentTarget.dataset.index)     },
 
-  onActivityTap(e) {
+    onActivityTap(e) {
     const id = e.currentTarget.dataset.id
     uni.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
-  },
+      },
 
-  onEditProfile() {
+    onEditProfile() {
     uni.navigateTo({
       url: '/pages/setup/setup?mode=edit'
     })
-  },
+      },
 
-  updateNickname(nickname) {
+    updateNickname(nickname) {
     const userId = app.globalData.userId
     uni.showLoading({ title: '保存中...' })
 
@@ -325,9 +323,9 @@ export default {
         uni.hideLoading()
         if (res.statusCode === 200) {
           uni.showToast({ title: '保存成功', icon: 'success' })
-          Object.assign(this, {
+          /* TODO: this.setData({
             'user.nickname': nickname
-          })
+          }) */
           // 更新全局用户信息
           if (app.globalData.userInfo) {
             app.globalData.userInfo.nickname = nickname
@@ -341,33 +339,33 @@ export default {
         uni.showToast({ title: '网络错误', icon: 'none' })
       }
     })
-  },
+      },
 
-  onSettings() {
+    onSettings() {
     uni.navigateTo({
       url: '/pages/settings/settings'
     })
-  },
+      },
 
-  onTemplates() {
+    onTemplates() {
     uni.navigateTo({
       url: '/pages/templates/templates'
     })
-  },
+      },
 
-  onVerify() {
+    onVerify() {
     uni.navigateTo({
       url: '/pages/verify/verify'
     })
-  },
+      },
 
-  onNotification() {
+    onNotification() {
     uni.navigateTo({
       url: '/pages/notification/notification'
     })
-  },
+      },
 
-  loadUnreadCount() {
+    loadUnreadCount() {
     const userId = app.globalData.userId
     if (!userId) return
 
@@ -380,9 +378,9 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onLogin() {
+    onLogin() {
     uni.showLoading({ title: '登录中...' })
     // 微信登录
     uni.login({
@@ -430,9 +428,9 @@ export default {
         })
       }
     })
-  },
+      },
 
-  checkPendingReview() {
+    checkPendingReview() {
     const userId = app.globalData.userId
     if (!userId) return
     
@@ -463,6 +461,7 @@ export default {
         }
       }
     })
+      }
   }
 }
 

@@ -38,25 +38,24 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    templates: [],
-    loading: true
+      templates: [],
+      loading: true
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     this.loadTemplates()
-  },
+    },
 
   onShow() {
     this.loadTemplates()
-  },
+    },
 
-  loadTemplates() {
+  methods: {
+    loadTemplates() {
     const userId = app.globalData.userId
     if (!userId) {
       this.loading = false
@@ -75,18 +74,18 @@ export default {
         this.loading = false
       }
     })
-  },
+      },
 
-  onUseTemplate(e) {
+    onUseTemplate(e) {
     const templateId = e.currentTarget.dataset.id
     // tabBar 页面不能用 navigateTo，用 storage 传模板ID
     uni.setStorageSync('useTemplateId', templateId)
     uni.switchTab({
       url: '/pages/create/create'
     })
-  },
+      },
 
-  onDeleteTemplate(e) {
+    onDeleteTemplate(e) {
     const templateId = e.currentTarget.dataset.id
     
     uni.showModal({
@@ -110,6 +109,7 @@ export default {
         }
       }
     })
+      }
   }
 }
 

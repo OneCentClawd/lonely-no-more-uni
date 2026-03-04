@@ -45,25 +45,24 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    notifications: [],
-    loading: true
+      notifications: [],
+      loading: true
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     this.loadNotifications()
-  },
+    },
 
   onShow() {
     this.loadNotifications()
-  },
+    },
 
-  loadNotifications() {
+  methods: {
+    loadNotifications() {
     if (!app.globalData.userId) {
       this.loading = false
       return
@@ -80,6 +79,7 @@ export default {
             ...item,
             timeAgo: this.formatTimeAgo(item.createdAt)
           }))
+          this.notifications = notifications
           this.loading = false
         }
       },
@@ -87,9 +87,9 @@ export default {
         this.loading = false
       }
     })
-  },
+      },
 
-  formatTimeAgo(timeStr) {
+    formatTimeAgo(timeStr) {
     if (!timeStr) return ''
     const date = new Date(timeStr)
     const now = new Date()
@@ -103,9 +103,9 @@ export default {
     if (hours < 24) return `${hours}小时前`
     if (days < 7) return `${days}天前`
     return `${date.getMonth() + 1}/${date.getDate()}`
-  },
+      },
 
-  onNotificationTap(e) {
+    onNotificationTap(e) {
     const { id, activityId } = e.currentTarget.dataset
     
     // 标记已读
@@ -123,9 +123,9 @@ export default {
         url: `/pages/detail/detail?id=${activityId}`
       })
     }
-  },
+      },
 
-  onMarkAllRead() {
+    onMarkAllRead() {
     uni.request({
       url: `${app.globalData.baseUrl}/notification/read-all`,
       method: 'POST',
@@ -137,10 +137,11 @@ export default {
           ...item,
           isRead: true
         }))
-        Object.assign(this, { notifications })
+        this.notifications = notifications
         uni.showToast({ title: '已全部已读', icon: 'success' })
       }
     })
+      }
   }
 }
 

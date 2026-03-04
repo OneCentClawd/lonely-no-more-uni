@@ -51,22 +51,21 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    activeTab: 'credit',
-    list: [],
-    loading: true
+      activeTab: 'credit',
+      list: [],
+      loading: true
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     this.loadLeaderboard()
-  },
+    },
 
-  onTabChange(e) {
+  methods: {
+    onTabChange(e) {
     const type = e.currentTarget.dataset.type
     if (type !== this.activeTab) {
       this.activeTab = type
@@ -74,9 +73,9 @@ export default {
       this.loading = true
       this.loadLeaderboard()
     }
-  },
+      },
 
-  loadLeaderboard() {
+    loadLeaderboard() {
     const { activeTab } = this.data
     
     uni.request({
@@ -90,13 +89,14 @@ export default {
         this.loading = false
       }
     })
-  },
+      },
 
-  onUserTap(e) {
+    onUserTap(e) {
     const userId = e.currentTarget.dataset.userid
     uni.navigateTo({
       url: `/pages/user/user?id=${userId}`
     })
+      }
   }
 }
 

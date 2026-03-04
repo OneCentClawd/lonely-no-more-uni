@@ -91,38 +91,37 @@
 <script>
 const app = getApp()
 
-
 export default {
   data() {
     return {
-    settings: {
+      settings: {
       showLocation: true,
       allowStrangerMessage: true,
       activityNotify: true,
       chatNotify: true
-    },
-    cacheSize: '0KB',
-    version: '1.0.0'
+      },
+      cacheSize: '0KB',
+      version: '1.0.0'
     }
   },
-  
-  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
+
   onLoad() {
     this.loadSettings()
     this.calculateCacheSize()
-  },
+    },
 
-  loadSettings() {
+  methods: {
+    loadSettings() {
     // 从本地存储加载设置
     const settings = uni.getStorageSync('userSettings') || this.settings
-    Object.assign(this, { settings })
-  },
+    this.settings = settings
+      },
 
-  saveSettings() {
+    saveSettings() {
     uni.setStorageSync('userSettings', this.settings)
-  },
+      },
 
-  calculateCacheSize() {
+    calculateCacheSize() {
     try {
       const res = uni.getStorageInfoSync()
       const sizeKB = res.currentSize
@@ -132,47 +131,47 @@ export default {
       } else {
         cacheSize = (sizeKB / 1024).toFixed(2) + 'MB'
       }
-      Object.assign(this, { cacheSize })
+      this.cacheSize = cacheSize
     } catch (e) {
       console.log('获取缓存大小失败', e)
     }
-  },
+      },
 
-  onShowLocationChange(e) {
+    onShowLocationChange(e) {
     const settings = this.settings
     settings.showLocation = e.detail.value
-    Object.assign(this, { settings })
+    this.settings = settings
     this.saveSettings()
-  },
+      },
 
-  onAllowStrangerMessageChange(e) {
+    onAllowStrangerMessageChange(e) {
     const settings = this.settings
     settings.allowStrangerMessage = e.detail.value
-    Object.assign(this, { settings })
+    this.settings = settings
     this.saveSettings()
-  },
+      },
 
-  onActivityNotifyChange(e) {
+    onActivityNotifyChange(e) {
     const settings = this.settings
     settings.activityNotify = e.detail.value
-    Object.assign(this, { settings })
+    this.settings = settings
     this.saveSettings()
-  },
+      },
 
-  onChatNotifyChange(e) {
+    onChatNotifyChange(e) {
     const settings = this.settings
     settings.chatNotify = e.detail.value
-    Object.assign(this, { settings })
+    this.settings = settings
     this.saveSettings()
-  },
+      },
 
-  onBlacklist() {
+    onBlacklist() {
     uni.navigateTo({
       url: '/pages/blacklist/blacklist'
     })
-  },
+      },
 
-  onClearCache() {
+    onClearCache() {
     uni.showModal({
       title: '清除缓存',
       content: '确定要清除所有缓存数据吗？（不会清除登录状态）',
@@ -199,18 +198,18 @@ export default {
         }
       }
     })
-  },
+      },
 
-  onAbout() {
+    onAbout() {
     uni.showModal({
       title: '关于孤独患者',
       content: '版本：v1.0.0\n\n一个帮你找搭子、告别孤独的小程序。\n\n如有问题请联系我们。',
       showCancel: false,
       confirmText: '知道了'
     })
-  },
+      },
 
-  onLogout() {
+    onLogout() {
     uni.showModal({
       title: '退出登录',
       content: '确定要退出登录吗？',
@@ -229,6 +228,7 @@ export default {
         }
       }
     })
+      }
   }
 }
 
