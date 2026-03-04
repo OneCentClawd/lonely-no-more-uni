@@ -64,16 +64,16 @@
   <view class="section">
     <view class="section-title">活动封面 <text class="optional">(选填)</text></view>
     <view class="cover-upload" @click="onChooseCover">
-      <block v-if="coverImage">
+      <template v-if="coverImage">
         <image class="cover-preview" :src="coverImage" mode="aspectFill"/>
         <view class="cover-delete" @click.stop="onDeleteCover">×</view>
-      </block>
-      <block v-else>
+      </template>
+      <template v-else>
         <view class="cover-placeholder">
           <text class="cover-icon">📷</text>
           <text class="cover-text">添加封面图</text>
         </view>
-      </block>
+      </template>
     </view>
   </view>
 

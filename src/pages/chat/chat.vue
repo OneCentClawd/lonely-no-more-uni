@@ -51,7 +51,7 @@
       <text class="empty-text">开始聊天吧～</text>
     </view>
 
-    <block v-for="(item, index) in messages" :key="item.id">
+    <template v-for="(item, index) in messages" :key="item.id">
       <!-- 时间分隔线 -->
       <view class="time-divider" v-if="item.showTimeDivider">
         <text>{{item.timeDividerText}}</text>
@@ -67,7 +67,7 @@
             v-if="!item.isSystem"
             id="msg-{{item.id}}">
         <!-- 他人消息：头像在左 -->
-        <block v-if="!item.isMine">
+        <template v-if="!item.isMine">
           <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" :data-userid="item.senderId"></image>
           <view class="message-content">
             <view class="sender-name">{{item.senderName}}</view>
@@ -77,9 +77,9 @@
             <view class="bubble" v-else>{{item.content}}</view>
             <view class="message-time">{{item.createdAt}}</view>
           </view>
-        </block>
+        </template>
         <!-- 我的消息：头像在右 -->
-        <block v-else>
+        <template v-else>
           <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" :data-userid="item.senderId"></image>
           <view class="message-content">
             <!-- 图片消息 -->
@@ -88,9 +88,9 @@
             <view class="bubble mine" v-else>{{item.content}}</view>
             <view class="message-time">{{item.createdAt}}</view>
           </view>
-        </block>
+        </template>
       </view>
-    </block>
+    </template>
   </scroll-view>
 
   <!-- 输入栏 -->

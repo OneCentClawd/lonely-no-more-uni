@@ -6,7 +6,7 @@
     <text>加载中...</text>
   </view>
   
-  <block v-else-if="user">
+  <template v-else-if="user">
     <!-- 头像和基本信息 -->
     <view class="user-header">
       <image class="user-avatar" :src="user.avatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onPreviewAvatar"></image>
@@ -130,7 +130,7 @@
       <button class="btn-report" @click="onReport">举报用户</button>
       <button class="btn-block" @click="onBlock">{{isBlocked ? '已拉黑' : '拉黑'}}</button>
     </view>
-  </block>
+  </template>
 
   <view class="empty" v-else>
     <text>用户不存在</text>

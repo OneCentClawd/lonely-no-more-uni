@@ -46,7 +46,7 @@
         <text class="search-section-clear" @click="onClearHistory">清空</text>
       </view>
       <view class="search-tags">
-        <view class="search-tag" v-for="(item, index) in recentSearches" :key="item" :data-keyword="item" @click="onSuggestionTap">{{item}}</view>
+        <view class="search-tag" v-for="(item, index) in recentSearches" :key="item" @click="onSuggestionTap(item)">{{item}}</view>
       </view>
     </view>
     <!-- 热门搜索 -->
@@ -55,7 +55,7 @@
         <text class="search-section-title">🔥 热门搜索</text>
       </view>
       <view class="search-tags">
-        <view class="search-tag hot" v-for="(item, index) in hotSearches" :key="item" :data-keyword="item" @click="onSuggestionTap">{{item}}</view>
+        <view class="search-tag hot" v-for="(item, index) in hotSearches" :key="item" @click="onSuggestionTap(item)">{{item}}</view>
       </view>
     </view>
   </view>
@@ -66,8 +66,7 @@
       <view 
         :class="['category-item', item.active ? 'active' : '']" 
         v-for="(item, index) in categories" :key="item.name"
-        :data-index="index"
-        @click="onCategoryTap"
+        @click="onCategoryTap(index)"
       >
         <text class="category-icon">{{item.icon}}</text>
         <text class="category-name">{{item.name}}</text>
@@ -99,8 +98,7 @@
     <view 
       :class="['activity-card card', item.coverImage ? 'has-cover' : '']" 
       v-for="(item, index) in activities" :key="item.id"
-      :data-id="item.id"
-      @click="onActivityTap"
+      @click="onActivityTap(item.id)"
     >
       <!-- 封面图 -->
       <image class="activity-cover" v-if="item.coverImage" :src="item.coverImage" mode="aspectFill"/>
@@ -140,7 +138,7 @@
             {{item.feeType === 'free' ? '免费' : (item.feeType === 'aa' ? 'AA制' : '¥' + item.feeAmount)}}
           </text>
         </view>
-        <view class="footer-right flex" @click.stop="onCreatorTap" :data-userid="item.creatorId">
+        <view class="footer-right flex" @click.stop="onCreatorTap(item.creatorId)">
           <image class="avatar" :src="item.creatorAvatar" mode="aspectFill"></image>
           <text class="creator-name text-small text-gray">{{item.creatorName}}</text>
         </view>
@@ -383,8 +381,7 @@ export default {
     return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
       },
 
-    onCategoryTap(e) {
-    const index = e.currentTarget.dataset.index
+    onCategoryTap(index) {
     const categories = this.categories.map((item, i) => ({
       ...item,
       active: i === index
@@ -431,8 +428,7 @@ export default {
     })
       },
 
-    onSuggestionTap(e) {
-    const keyword = e.currentTarget.dataset.keyword
+    onSuggestionTap(keyword) {
     this.searchKeyword = keyword
     this.showSearchPanel = false
     this.onSearch()
@@ -540,15 +536,13 @@ export default {
     this.loadActivities()
       },
 
-    onActivityTap(e) {
-    const id = e.currentTarget.dataset.id
+    onActivityTap(id) {
     uni.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
       },
 
-    onCreatorTap(e) {
-    const userId = e.currentTarget.dataset.userid
+    onCreatorTap(userId) {
     if (userId) {
       uni.navigateTo({
         url: `/pages/user/user?id=${userId}`
