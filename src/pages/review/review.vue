@@ -18,11 +18,11 @@
         </view>
       </view>
       <view class="rating-buttons">
-        <view :class="['rating-btn positive', item.selected === 2 ? 'selected' : '']" :data-index="index" data-rating="2" @click="onRatingTap">
+        <view :class="['rating-btn positive', item.selected === 2 ? 'selected' : '']" @click="onRatingTap(index, 2)">
           <text class="rating-icon">👍</text>
           <text class="rating-text">好评</text>
         </view>
-        <view :class="['rating-btn negative', item.selected === 1 ? 'selected' : '']" :data-index="index" data-rating="1" @click="onRatingTap">
+        <view :class="['rating-btn negative', item.selected === 1 ? 'selected' : '']" @click="onRatingTap(index, 1)">
           <text class="rating-icon">👎</text>
           <text class="rating-text">差评</text>
         </view>
@@ -33,8 +33,7 @@
           class="comment-input" 
           placeholder="写一句评价（可选）" 
           maxlength="100"
-          :data-index="index"
-          @input="onCommentInput"
+          @input="(e) => onCommentInput(index, e.detail.value)"
         />
       </view>
     </view>
@@ -97,8 +96,7 @@ export default {
     })
       },
 
-    onRatingTap(e) {
-    const { index, rating } = e.currentTarget.dataset
+    onRatingTap(index, rating) {
     const members = this.members
     // 如果点击已选中的，取消选择
     if (members[index].selected === rating) {
@@ -109,10 +107,9 @@ export default {
     this.members = members
       },
 
-    onCommentInput(e) {
-    const { index } = e.currentTarget.dataset
+    onCommentInput(index, value) {
     const members = this.members
-    members[index].comment = e.detail.value
+    members[index].comment = value
     this.members = members
       },
 

@@ -12,9 +12,7 @@
     <view 
       :class="['notification-item', item.isRead ? 'read' : 'unread']"
       v-for="(item, index) in notifications" :key="item.id"
-      :data-id="item.id"
-      :data-activity-id="item.activityId"
-      @click="onNotificationTap"
+      @click="onNotificationTap(item.id, item.activityId)"
     >
       <view class="notification-icon">
         <text v-if="item.type === 1">👋</text>
@@ -105,9 +103,7 @@ export default {
     return `${date.getMonth() + 1}/${date.getDate()}`
       },
 
-    onNotificationTap(e) {
-    const { id, activityId } = e.currentTarget.dataset
-    
+    onNotificationTap(id, activityId) {
     // 标记已读
     uni.request({
       url: `${app.globalData.baseUrl}/notification/${id}/read`,

@@ -58,7 +58,7 @@
   <view class="members-card card">
     <view class="section-title">参与者 ({{activity.currentMembers}})</view>
     <view class="members-list">
-      <view class="member-item" v-for="(item, index) in activity.members" :key="item.id" @click="onMemberTap" :data-userid="item.userId">
+      <view class="member-item" v-for="(item, index) in activity.members" :key="item.id" @click="onMemberTap(item.userId)">
         <image class="member-avatar" :src="item.avatar" mode="aspectFill"></image>
         <text class="member-name">{{item.nickname}}</text>
         <text class="creator-badge" v-if="item.role === 1">发起人</text>
@@ -87,9 +87,9 @@
       </view>
     </view>
     <view class="photos-grid" v-if="photos.length > 0">
-      <view class="photo-item" v-for="(item, index) in photos" :key="item.id" @click="onPreviewPhoto" :data-index="index">
+      <view class="photo-item" v-for="(item, index) in photos" :key="item.id" @click="onPreviewPhoto(index)">
         <image class="photo-image" :src="item.imageUrl" mode="aspectFill"></image>
-        <view class="photo-delete" v-if="item.userId === userId" @click.stop="onDeletePhoto" :data-id="item.id">×</view>
+        <view class="photo-delete" v-if="item.userId === userId" @click.stop="onDeletePhoto(item.id)">×</view>
       </view>
     </view>
     <view class="photos-empty" v-if="photos.length === 0">
@@ -312,8 +312,7 @@ export default {
     return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
       },
 
-    onMemberTap(e) {
-    const userId = e.currentTarget.dataset.userid
+    onMemberTap(userId) {
     if (userId) {
       uni.navigateTo({
         url: `/pages/user/user?id=${userId}`
@@ -538,8 +537,7 @@ export default {
     })
       },
 
-    onPreviewPhoto(e) {
-    const index = e.currentTarget.dataset.index
+    onPreviewPhoto(index) {
     const urls = this.photos.map(p => p.imageUrl)
     uni.previewImage({
       current: urls[index],
@@ -547,8 +545,7 @@ export default {
     })
       },
 
-    onDeletePhoto(e) {
-    const photoId = e.currentTarget.dataset.id
+    onDeletePhoto(photoId) {
     uni.showModal({
       title: '删除照片',
       content: '确定要删除这张照片吗？',

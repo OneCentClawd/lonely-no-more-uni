@@ -3,7 +3,7 @@
 <view class="container">
   <view class="template-list" v-if="templates.length > 0">
     <view class="template-card card" v-for="(item, index) in templates" :key="item.id">
-      <view class="template-info" @click="onUseTemplate" :data-id="item.id">
+      <view class="template-info" @click="onUseTemplate(item.id)">
         <view class="template-header">
           <text class="template-name">{{item.name}}</text>
           <text class="use-count">使用{{item.useCount}}次</text>
@@ -16,8 +16,8 @@
         <view class="template-title" v-if="item.title">{{item.title}}</view>
       </view>
       <view class="template-actions">
-        <view class="action-btn use" @click="onUseTemplate" :data-id="item.id">使用</view>
-        <view class="action-btn delete" @click="onDeleteTemplate" :data-id="item.id">删除</view>
+        <view class="action-btn use" @click="onUseTemplate(item.id)">使用</view>
+        <view class="action-btn delete" @click="onDeleteTemplate(item.id)">删除</view>
       </view>
     </view>
   </view>
@@ -76,8 +76,7 @@ export default {
     })
       },
 
-    onUseTemplate(e) {
-    const templateId = e.currentTarget.dataset.id
+    onUseTemplate(templateId) {
     // tabBar 页面不能用 navigateTo，用 storage 传模板ID
     uni.setStorageSync('useTemplateId', templateId)
     uni.switchTab({
@@ -85,9 +84,7 @@ export default {
     })
       },
 
-    onDeleteTemplate(e) {
-    const templateId = e.currentTarget.dataset.id
-    
+    onDeleteTemplate(templateId) {
     uni.showModal({
       title: '删除模板',
       content: '确定要删除这个模板吗？',

@@ -47,8 +47,7 @@
           v-for="(item, index) in user.photos" :key="item" 
           :src="item" 
           mode="aspectFill"
-          :data-index="index"
-          @click="onPreviewPhoto"
+          @click="onPreviewPhoto(index)"
         ></image>
       </view>
     </view>
@@ -65,7 +64,7 @@
     <view class="section" v-if="activities && activities.length > 0">
       <view class="section-title">参与的活动 ({{activities.length}})</view>
       <view class="activity-list">
-        <view class="activity-item" v-for="(item, index) in activities" :key="item.id" @click="onActivityTap" :data-id="item.id">
+        <view class="activity-item" v-for="(item, index) in activities" :key="item.id" @click="onActivityTap(item.id)">
           <image class="activity-cover" :src="item.coverImage || '/images/default-cover.jpg'" mode="aspectFill"></image>
           <view class="activity-info">
             <text class="activity-title">{{item.title}}</text>
@@ -281,8 +280,7 @@ export default {
     }
       },
 
-    onPreviewPhoto(e) {
-    const index = e.currentTarget.dataset.index
+    onPreviewPhoto(index) {
     const photos = this.user.photos
     if (photos && photos.length > 0) {
       uni.previewImage({
@@ -292,8 +290,7 @@ export default {
     }
       },
 
-    onActivityTap(e) {
-    const id = e.currentTarget.dataset.id
+    onActivityTap(id) {
     uni.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })

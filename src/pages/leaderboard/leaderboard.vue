@@ -3,17 +3,17 @@
 <view class="container">
   <!-- Tab 切换 -->
   <view class="tabs">
-    <view :class="['tab', activeTab === 'credit' ? 'active' : '']" data-type="credit" @click="onTabChange">
+    <view :class="['tab', activeTab === 'credit' ? 'active' : '']" @click="onTabChange('credit')">
       ⭐ 信用榜
     </view>
-    <view :class="['tab', activeTab === 'active' ? 'active' : '']" data-type="active" @click="onTabChange">
+    <view :class="['tab', activeTab === 'active' ? 'active' : '']" @click="onTabChange('active')">
       🔥 活跃榜
     </view>
   </view>
 
   <!-- 排行榜列表 -->
   <view class="leaderboard-list">
-    <view class="leaderboard-item" v-for="(item, index) in list" :key="item.userId" @click="onUserTap" :data-userid="item.userId">
+    <view class="leaderboard-item" v-for="(item, index) in list" :key="item.userId" @click="onUserTap(item.userId)">
       <!-- 排名 -->
       <view :class="['rank rank-', item.rank]">
         <text v-if="item.rank <= 3" class="rank-medal">{{item.rank === 1 ? '🥇' : (item.rank === 2 ? '🥈' : '🥉')}}</text>
@@ -65,8 +65,7 @@ export default {
     },
 
   methods: {
-    onTabChange(e) {
-    const type = e.currentTarget.dataset.type
+    onTabChange(type) {
     if (type !== this.activeTab) {
       this.activeTab = type
       this.list = []
@@ -76,7 +75,7 @@ export default {
       },
 
     loadLeaderboard() {
-    const { activeTab } = this.data
+    const activeTab = this.activeTab
     
     uni.request({
       url: `${app.globalData.baseUrl}/user/leaderboard?type=${activeTab}`,
@@ -91,8 +90,7 @@ export default {
     })
       },
 
-    onUserTap(e) {
-    const userId = e.currentTarget.dataset.userid
+    onUserTap(userId) {
     uni.navigateTo({
       url: `/pages/user/user?id=${userId}`
     })

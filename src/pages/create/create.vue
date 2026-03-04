@@ -10,8 +10,7 @@
         <view 
           class="template-item" 
           v-for="(item, index) in templates" :key="item.id" 
-          :data-id="item.id"
-          @click="onTemplateTap"
+          @click="onTemplateTap(item.id)"
         >
           <text class="template-icon">📋</text>
           <text class="template-name">{{item.name}}</text>
@@ -27,8 +26,7 @@
       <view 
         :class="['category-item', selectedCategory === index ? 'selected' : '']"
         v-for="(item, index) in categories" :key="item.name"
-        :data-index="index"
-        @click="onCategoryTap"
+        @click="onCategoryTap(index)"
       >
         <text class="category-icon">{{item.icon}}</text>
         <text class="category-name">{{item.name}}</text>
@@ -265,8 +263,7 @@ export default {
     })
       },
 
-    onTemplateTap(e) {
-    const templateId = e.currentTarget.dataset.id
+    onTemplateTap(templateId) {
     const userId = app.globalData.userId
     
     uni.request({
@@ -325,8 +322,7 @@ export default {
     this.times = times
       },
 
-    onCategoryTap(e) {
-    const index = e.currentTarget.dataset.index
+    onCategoryTap(index) {
     this.selectedCategory = index
       },
 

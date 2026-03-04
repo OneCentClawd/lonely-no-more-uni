@@ -10,7 +10,7 @@
         <text class="nickname">{{item.nickname || '用户' + item.blockedUserId}}</text>
         <text class="time">{{item.createdAtText}}</text>
       </view>
-      <button class="btn-unblock" size="mini" @click="onUnblock" :data-id="item.blockedUserId">解除</button>
+      <button class="btn-unblock" size="mini" @click="onUnblock(item.blockedUserId)">解除</button>
     </view>
   </view>
 
@@ -78,8 +78,7 @@ export default {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
       },
 
-    onUnblock(e) {
-    const blockedUserId = e.currentTarget.dataset.id
+    onUnblock(blockedUserId) {
     uni.showModal({
       title: '解除拉黑',
       content: '确定要解除拉黑该用户吗？',

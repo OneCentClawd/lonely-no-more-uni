@@ -77,8 +77,7 @@
       <view 
         :class="['interest-item', selectedMap[item] ? 'selected' : '']"
         v-for="(item, index) in interestOptions" :key="item"
-        :data-interest="item"
-        @click="onInterestTap"
+        @click="onInterestTap(item)"
       >
         {{item}}
       </view>
@@ -94,9 +93,8 @@
         v-for="(item, index) in photos" :key="item" 
         :src="item" 
         mode="aspectFill"
-        :data-index="index"
-        @click="onPreviewPhoto"
-        @longpress="onDeletePhoto"
+        @click="onPreviewPhoto(index)"
+        @longpress="onDeletePhoto(index)"
       ></image>
       <view class="photo-add" v-if="photos.length < 9" @click="onAddPhoto">
         <text class="add-icon">+</text>
@@ -273,9 +271,9 @@ export default {
     this.bio = e.detail.value
       },
 
-    onInterestTap(e) {
-    const interest = e.currentTarget.dataset.interest
-    let { selectedInterests, selectedMap } = this.data
+    onInterestTap(interest) {
+    let selectedInterests = this.selectedInterests
+    let selectedMap = this.selectedMap
     
     if (selectedMap[interest]) {
       // 取消选中
@@ -341,16 +339,14 @@ export default {
     })
       },
 
-    onPreviewPhoto(e) {
-    const index = e.currentTarget.dataset.index
+    onPreviewPhoto(index) {
     uni.previewImage({
       urls: this.photos,
       current: this.photos[index]
     })
       },
 
-    onDeletePhoto(e) {
-    const index = e.currentTarget.dataset.index
+    onDeletePhoto(index) {
     uni.showActionSheet({
       itemList: ['删除这张照片'],
       success: (res) => {

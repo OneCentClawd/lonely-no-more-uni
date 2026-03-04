@@ -19,7 +19,7 @@
         <text class="close-btn" @click="onHideMembers">×</text>
       </view>
       <scroll-view class="members-scroll" scroll-y>
-        <view class="member-item" v-for="(item, index) in members" :key="item.userId" @click="onMemberTap" :data-userid="item.userId">
+        <view class="member-item" v-for="(item, index) in members" :key="item.userId" @click="onMemberTap(item.userId)">
           <image class="member-avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
           <text class="member-name">{{item.nickname || '用户' + item.userId}}</text>
           <text class="creator-badge" v-if="item.role === 1">发起人</text>
@@ -68,11 +68,11 @@
             id="msg-{{item.id}}">
         <!-- 他人消息：头像在左 -->
         <template v-if="!item.isMine">
-          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" :data-userid="item.senderId"></image>
+          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap(item.senderId)"></image>
           <view class="message-content">
             <view class="sender-name">{{item.senderName}}</view>
             <!-- 图片消息 -->
-            <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage" :data-url="item.imageUrl"></image>
+            <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage(item.imageUrl)"></image>
             <!-- 文字消息 -->
             <view class="bubble" v-else>{{item.content}}</view>
             <view class="message-time">{{item.createdAt}}</view>
@@ -80,10 +80,10 @@
         </template>
         <!-- 我的消息：头像在右 -->
         <template v-else>
-          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" :data-userid="item.senderId"></image>
+          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap(item.senderId)"></image>
           <view class="message-content">
             <!-- 图片消息 -->
-            <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage" :data-url="item.imageUrl"></image>
+            <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage(item.imageUrl)"></image>
             <!-- 文字消息 -->
             <view class="bubble mine" v-else>{{item.content}}</view>
             <view class="message-time">{{item.createdAt}}</view>
@@ -394,16 +394,14 @@ export default {
     this.showMembersModal = false
       },
 
-    onMemberTap(e) {
-    const userId = e.currentTarget.dataset.userid
+    onMemberTap(userId) {
     this.showMembersModal = false
     uni.navigateTo({
       url: `/pages/user/user?id=${userId}`
     })
       },
 
-    onAvatarTap(e) {
-    const userId = e.currentTarget.dataset.userid
+    onAvatarTap(userId) {
     if (userId) {
       uni.navigateTo({
         url: `/pages/user/user?id=${userId}`
@@ -515,8 +513,7 @@ export default {
     })
       },
 
-    onPreviewImage(e) {
-    const url = e.currentTarget.dataset.url
+    onPreviewImage(url) {
     if (url) {
       uni.previewImage({
         urls: [url],

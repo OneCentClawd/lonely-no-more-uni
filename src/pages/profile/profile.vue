@@ -40,13 +40,13 @@
     
     <!-- Tab 切换 -->
     <view class="tabs">
-      <view :class="['tab', activeTab === 0 ? 'active' : '']" data-index="0" @click="onTabChange">
+      <view :class="['tab', activeTab === 0 ? 'active' : '']" @click="onTabChange(0)">
         全部
       </view>
-      <view :class="['tab', activeTab === 1 ? 'active' : '']" data-index="1" @click="onTabChange">
+      <view :class="['tab', activeTab === 1 ? 'active' : '']" @click="onTabChange(1)">
         我发起的
       </view>
-      <view :class="['tab', activeTab === 2 ? 'active' : '']" data-index="2" @click="onTabChange">
+      <view :class="['tab', activeTab === 2 ? 'active' : '']" @click="onTabChange(2)">
         我参与的
       </view>
     </view>
@@ -56,8 +56,7 @@
       <view 
         class="activity-item card" 
         v-for="(item, index) in myActivities" :key="item.id"
-        :data-id="item.id"
-        @click="onActivityTap"
+        @click="onActivityTap(item.id)"
       >
         <view class="activity-left">
           <text class="activity-icon">{{item.categoryIcon}}</text>
@@ -291,11 +290,11 @@ export default {
     return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
       },
 
-    onTabChange(e) {
-    this.activeTab = parseInt(e.currentTarget.dataset.index)     },
+    onTabChange(index) {
+    this.activeTab = parseInt(index)
+      },
 
-    onActivityTap(e) {
-    const id = e.currentTarget.dataset.id
+    onActivityTap(id) {
     uni.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
