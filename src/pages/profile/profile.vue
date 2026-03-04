@@ -10,7 +10,12 @@
   <!-- 未登录状态 -->
   <view class="login-card card" v-if="!isLoggedIn && !loading">
     <text class="login-hint">登录后查看你的活动</text>
-    <button class="btn-primary" @click="onLogin">一键登录</button>
+    <!-- #ifdef MP-WEIXIN -->
+    <button class="btn-primary" @click="onWxLogin">微信一键登录</button>
+    <!-- #endif -->
+    <!-- #ifndef MP-WEIXIN -->
+    <button class="btn-primary" @click="onLogin">登录 / 注册</button>
+    <!-- #endif -->
   </view>
 
   <!-- 用户信息卡片 -->
@@ -378,8 +383,15 @@ export default {
       },
 
     onLogin() {
+    // H5: 跳转到登录页
+    uni.navigateTo({
+      url: '/pages/login/login'
+    })
+      },
+
+    onWxLogin() {
+    // 小程序: 微信登录
     uni.showLoading({ title: '登录中...' })
-    // 微信登录
     uni.login({
       success: (loginRes) => {
         if (!loginRes.code) {
