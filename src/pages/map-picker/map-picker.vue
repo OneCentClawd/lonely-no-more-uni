@@ -59,17 +59,8 @@ export default {
 
   methods: {
     initMap() {
-      // 加载高德地图
-      if (typeof AMap === 'undefined') {
-        const script = document.createElement('script')
-        script.src = 'https://webapi.amap.com/maps?v=2.0&key=8d18232c4c0126e700f67a35097c7e9c'
-        script.onload = () => {
-          this.createMap()
-        }
-        document.head.appendChild(script)
-      } else {
-        this.createMap()
-      }
+      // 高德地图已在 index.html 加载
+      this.createMap()
     },
 
     createMap() {
