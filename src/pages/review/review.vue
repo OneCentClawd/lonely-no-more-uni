@@ -76,7 +76,7 @@ export default {
 
   methods: {
     loadReviewableMembers() {
-    const { activityId } = this.data
+    const { activityId } = this
     uni.request({
       url: `${app.globalData.baseUrl}/review/activity/${activityId}/reviewable`,
       header: { 'X-User-Id': app.globalData.userId },
@@ -114,7 +114,7 @@ export default {
       },
 
     onSubmit() {
-    const { activityId, members } = this.data
+    const { activityId, members } = this
     const toSubmit = members.filter(m => m.selected)
     
     if (toSubmit.length === 0) {

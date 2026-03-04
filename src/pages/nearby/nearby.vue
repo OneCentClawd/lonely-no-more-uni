@@ -108,7 +108,7 @@ export default {
       },
 
     loadNearbyUsers() {
-    const { latitude, longitude, radiusOptions, radiusIndex } = this.data
+    const { latitude, longitude, radiusOptions, radiusIndex } = this
     if (!latitude || !longitude) return
 
     const radius = radiusOptions[radiusIndex].value

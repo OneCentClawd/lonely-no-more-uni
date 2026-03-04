@@ -295,7 +295,7 @@ export default {
       },
 
     onAddPhoto() {
-    const { photos } = this.data
+    const { photos } = this
     if (photos.length >= 9) {
       uni.showToast({ title: '最多上传9张照片', icon: 'none' })
       return
@@ -360,7 +360,7 @@ export default {
       },
 
     onSubmit() {
-    const { nickname, avatar, gender, birthday, zodiac, bio, photos, selectedInterests, submitting, isEdit } = this.data
+    const { nickname, avatar, gender, birthday, zodiac, bio, photos, selectedInterests, submitting, isEdit } = this
     
     if (submitting) return
     

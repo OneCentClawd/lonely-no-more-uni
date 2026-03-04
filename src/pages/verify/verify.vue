@@ -187,7 +187,7 @@ export default {
       },
 
     submitRealName() {
-    const { realName, idCard } = this.data
+    const { realName, idCard } = this
     
     if (!realName.trim()) {
       uni.showToast({ title: '请输入真实姓名', icon: 'none' })
@@ -227,7 +227,7 @@ export default {
       },
 
     submitStudent() {
-    const { school, studentCardImage } = this.data
+    const { school, studentCardImage } = this
     
     if (!school.trim()) {
       uni.showToast({ title: '请输入学校名称', icon: 'none' })

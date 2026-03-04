@@ -178,7 +178,7 @@ export default {
       },
 
     loadActivityInfo() {
-    const { activityId } = this.data
+    const { activityId } = this
     uni.request({
       url: `${app.globalData.baseUrl}/activity/${activityId}`,
       success: (res) => {
@@ -198,7 +198,7 @@ export default {
       },
 
     loadHistory() {
-    const { activityId } = this.data
+    const { activityId } = this
     uni.request({
       url: `${app.globalData.baseUrl}/chat/${activityId}/history`,
       header: { 'X-User-Id': app.globalData.userId },
@@ -272,7 +272,7 @@ export default {
       },
 
     markAllAsRead() {
-    const { activityId } = this.data
+    const { activityId } = this
     uni.request({
       url: `${app.globalData.baseUrl}/chat/${activityId}/read-all`,
       method: 'PUT',

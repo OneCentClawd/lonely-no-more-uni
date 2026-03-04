@@ -227,7 +227,7 @@ export default {
     },
 
   onShareAppMessage() {
-    const { activity, activityId } = this.data
+    const { activity, activityId } = this
     return {
       title: activity ? `${activity.title} - ${activity.currentMembers}/${activity.maxMembers}人` : '一起来参加活动吧',
       path: `/pages/detail/detail?id=${activityId}`,
@@ -237,7 +237,7 @@ export default {
 
   methods: {
     loadActivity() {
-    const { activityId } = this.data
+    const { activityId } = this
     this.loading = true
 
     return new Promise((resolve) => {
@@ -465,7 +465,7 @@ export default {
       },
 
     onPreviewCover() {
-    const { activity } = this.data
+    const { activity } = this
     if (activity && activity.coverImage) {
       uni.previewImage({
         current: activity.coverImage,
@@ -475,7 +475,7 @@ export default {
       },
 
     loadPhotos() {
-    const { activityId } = this.data
+    const { activityId } = this
     uni.request({
       url: `${app.globalData.baseUrl}/activity/${activityId}/photos`,
       success: (res) => {
@@ -566,7 +566,7 @@ export default {
       },
 
     onOpenLocation() {
-    const { activity } = this.data
+    const { activity } = this
     if (activity && activity.latitude && activity.longitude) {
       uni.openLocation({
         latitude: activity.latitude,
@@ -578,7 +578,7 @@ export default {
       },
 
     onShareTimeline() {
-    const { activity, activityId } = this.data
+    const { activity, activityId } = this
     return {
       title: activity ? `${activity.title} - 快来一起参加！` : '一起来参加活动吧',
       query: `id=${activityId}`,
@@ -613,7 +613,7 @@ export default {
       },
 
     onSavePoster() {
-    const { posterImage } = this.data
+    const { posterImage } = this
     if (!posterImage) return
 
     // Base64 转临时文件
@@ -652,7 +652,7 @@ export default {
       return
     }
 
-    const { activity } = this.data
+    const { activity } = this
     
     uni.showActionSheet({
       itemList: ['虚假活动', '骚扰行为', '违规内容', '其他'],

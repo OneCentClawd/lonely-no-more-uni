@@ -286,7 +286,7 @@ export default {
     loadActivities() {
     this.loading = true
     
-    const { latitude, longitude, selectedCategory, distanceOptions, distanceIndex } = this.data
+    const { latitude, longitude, selectedCategory, distanceOptions, distanceIndex } = this
     const radius = distanceOptions[distanceIndex].value
     
     let url
@@ -347,7 +347,7 @@ export default {
       },
 
     calculateDistance(lat, lng) {
-    const { latitude, longitude } = this.data
+    const { latitude, longitude } = this
     if (!latitude || !longitude) return ''
     
     const km = util.getDistance(latitude, longitude, lat, lng)
@@ -450,7 +450,7 @@ export default {
       },
 
     onSearch() {
-    const { searchKeyword } = this.data
+    const { searchKeyword } = this
     if (!searchKeyword.trim()) {
       this.isSearching = false
       this.loadActivities()

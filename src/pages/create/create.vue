@@ -438,7 +438,7 @@ export default {
       },
 
     onSubmit() {
-    const { selectedCategory, title, address, latitude, longitude, maxMembers, dates, times, dateIndex, timeIndex, feeType, feeAmount, description, coverImage, submitting } = this.data
+    const { selectedCategory, title, address, latitude, longitude, maxMembers, dates, times, dateIndex, timeIndex, feeType, feeAmount, description, coverImage, submitting } = this
 
     if (submitting) return
 

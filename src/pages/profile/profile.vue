@@ -223,7 +223,7 @@ export default {
     const userId = app.globalData.userId
     if (!userId) return
 
-    const { activeTab } = this.data
+    const { activeTab } = this
     const roleMap = ['all', 'creator', 'member']
     const role = roleMap[activeTab] || 'all'
 
