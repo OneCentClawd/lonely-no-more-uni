@@ -189,8 +189,10 @@ const categoryIcons = {
   '其他': '💡'
 }
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     activityId: null,
     activity: null,
     loading: true,
@@ -203,18 +205,18 @@ Page({
     userId: null,
     showPoster: false,
     posterImage: ''
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad(options) {
-    this.setData({ 
-      activityId: options.id,
-      userId: app.globalData.userId
-    })
+    this.activityId = options.id
+        this.userId = app.globalData.userId
     this.loadActivity()
   },
 
   onShow() {
-    if (this.data.activityId) {
+    if (this.activityId) {
       this.loadActivity()
       this.loadPhotos()
     }
@@ -228,7 +230,7 @@ Page({
 
   loadActivity() {
     const { activityId } = this.data
-    this.setData({ loading: true })
+    this.loading = true
 
     return new Promise((resolve) => {
       uni.request({
@@ -263,24 +265,22 @@ Page({
           // status: 0招募中 1已满员 2进行中 3已结束 4已取消
           const isExpired = activity.status >= 3
 
-          this.setData({
-            activity: activityData,
+          this.activity = activityData,
             isCreator,
             isJoined,
             isFull,
             isExpired,
             loading: false
-          })
           resolve()
         } else {
           uni.showToast({ title: '活动不存在', icon: 'none' })
-          this.setData({ loading: false })
+          this.loading = false
           resolve()
         }
       },
       fail: () => {
         uni.showToast({ title: '加载失败', icon: 'none' })
-        this.setData({ loading: false })
+        this.loading = false
         resolve()
       }
     })
@@ -319,8 +319,8 @@ Page({
       return
     }
 
-    if (this.data.joining) return
-    this.setData({ joining: true })
+    if (this.joining) return
+    this.joining = true
 
     // 先请求订阅消息授权
     uni.requestSubscribeMessage({
@@ -338,7 +338,7 @@ Page({
 
   doJoin() {
     uni.request({
-      url: `${app.globalData.baseUrl}/activity/${this.data.activityId}/join`,
+      url: `${app.globalData.baseUrl}/activity/${this.activityId}/join`,
       method: 'POST',
       header: { 'X-User-Id': app.globalData.userId },
       success: (res) => {
@@ -353,7 +353,7 @@ Page({
         uni.showToast({ title: '网络错误', icon: 'none' })
       },
       complete: () => {
-        this.setData({ joining: false })
+        this.joining = false
       }
     })
   },
@@ -365,7 +365,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           uni.request({
-            url: `${app.globalData.baseUrl}/activity/${this.data.activityId}/leave`,
+            url: `${app.globalData.baseUrl}/activity/${this.activityId}/leave`,
             method: 'POST',
             header: { 'X-User-Id': app.globalData.userId },
             success: (res) => {
@@ -392,7 +392,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           uni.request({
-            url: `${app.globalData.baseUrl}/activity/${this.data.activityId}/cancel`,
+            url: `${app.globalData.baseUrl}/activity/${this.activityId}/cancel`,
             method: 'POST',
             header: { 'X-User-Id': app.globalData.userId },
             success: (res) => {
@@ -422,7 +422,7 @@ Page({
       success: (res) => {
         if (res.confirm && res.content && res.content.trim()) {
           uni.request({
-            url: `${app.globalData.baseUrl}/template/from-activity/${this.data.activityId}`,
+            url: `${app.globalData.baseUrl}/template/from-activity/${this.activityId}`,
             method: 'POST',
             header: { 
               'X-User-Id': app.globalData.userId,
@@ -447,13 +447,13 @@ Page({
 
   onChat() {
     uni.navigateTo({
-      url: `/pages/chat/chat?id=${this.data.activityId}`
+      url: `/pages/chat/chat?id=${this.activityId}`
     })
   },
 
   onReview() {
     uni.navigateTo({
-      url: `/pages/review/review?activityId=${this.data.activityId}`
+      url: `/pages/review/review?activityId=${this.activityId}`
     })
   },
 
@@ -474,7 +474,7 @@ Page({
       url: `${app.globalData.baseUrl}/activity/${activityId}/photos`,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ photos: res.data || [] })
+          this.photos = res.data || []
         }
       }
     })
@@ -501,7 +501,7 @@ Page({
                 const data = JSON.parse(uploadRes.data)
                 // 保存到活动相册
                 uni.request({
-                  url: `${app.globalData.baseUrl}/activity/${this.data.activityId}/photos`,
+                  url: `${app.globalData.baseUrl}/activity/${this.activityId}/photos`,
                   method: 'POST',
                   header: { 
                     'X-User-Id': app.globalData.userId,
@@ -533,7 +533,7 @@ Page({
 
   onPreviewPhoto(e) {
     const index = e.currentTarget.dataset.index
-    const urls = this.data.photos.map(p => p.imageUrl)
+    const urls = this.photos.map(p => p.imageUrl)
     uni.previewImage({
       current: urls[index],
       urls: urls
@@ -548,7 +548,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           uni.request({
-            url: `${app.globalData.baseUrl}/activity/${this.data.activityId}/photos/${photoId}`,
+            url: `${app.globalData.baseUrl}/activity/${this.activityId}/photos/${photoId}`,
             method: 'DELETE',
             header: { 'X-User-Id': app.globalData.userId },
             success: () => {
@@ -595,14 +595,12 @@ Page({
     uni.showLoading({ title: '生成海报中...' })
     
     uni.request({
-      url: `${app.globalData.baseUrl}/activity/${this.data.activityId}/poster`,
+      url: `${app.globalData.baseUrl}/activity/${this.activityId}/poster`,
       success: (res) => {
         uni.hideLoading()
         if (res.statusCode === 200 && res.data.poster) {
-          this.setData({
-            showPoster: true,
-            posterImage: res.data.poster
-          })
+          this.showPoster = true
+        this.posterImage = res.data.poster
         } else {
           uni.showToast({ title: '生成失败', icon: 'none' })
         }
@@ -615,7 +613,7 @@ Page({
   },
 
   onClosePoster() {
-    this.setData({ showPoster: false, posterImage: '' })
+    this.showPoster = false, posterImage: ''
   },
 
   onSavePoster() {
@@ -689,7 +687,7 @@ Page({
       },
       data: {
         reportedUserId,
-        activityId: this.data.activityId,
+        activityId: this.activityId,
         reason
       },
       success: (res) => {
@@ -704,7 +702,7 @@ Page({
       }
     })
   }
-})
+}
 
 </script>
 

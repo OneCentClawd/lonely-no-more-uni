@@ -31,12 +31,16 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     list: [],
     loading: true
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     this.loadBlackList()
   },
@@ -46,7 +50,7 @@ Page({
   },
 
   loadBlackList() {
-    this.setData({ loading: true })
+    this.loading = true
     uni.request({
       url: `${app.globalData.baseUrl}/blacklist`,
       header: { 'X-User-Id': app.globalData.userId },
@@ -56,13 +60,13 @@ Page({
             ...item,
             createdAtText: this.formatTime(item.createdAt)
           }))
-          this.setData({ list, loading: false })
+          this.loading = false
         } else {
-          this.setData({ loading: false })
+          this.loading = false
         }
       },
       fail: () => {
-        this.setData({ loading: false })
+        this.loading = false
         uni.showToast({ title: '加载失败', icon: 'none' })
       }
     })
@@ -101,7 +105,7 @@ Page({
       }
     })
   }
-})
+}
 
 </script>
 

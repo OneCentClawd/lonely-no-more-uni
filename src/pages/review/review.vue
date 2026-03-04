@@ -58,17 +58,21 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     activityId: null,
     members: [],
     loading: true,
     submitting: false
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad(options) {
     if (options.activityId) {
-      this.setData({ activityId: options.activityId })
+      this.activityId = options.activityId
       this.loadReviewableMembers()
     }
   },
@@ -84,10 +88,10 @@ Page({
           selected: null,
           comment: ''
         }))
-        this.setData({ members, loading: false })
+        this.loading = false
       },
       fail: () => {
-        this.setData({ loading: false })
+        this.loading = false
         uni.showToast({ title: '加载失败', icon: 'none' })
       }
     })
@@ -95,21 +99,21 @@ Page({
 
   onRatingTap(e) {
     const { index, rating } = e.currentTarget.dataset
-    const members = this.data.members
+    const members = this.members
     // 如果点击已选中的，取消选择
     if (members[index].selected === rating) {
       members[index].selected = null
     } else {
       members[index].selected = rating
     }
-    this.setData({ members })
+    Object.assign(this, { members })
   },
 
   onCommentInput(e) {
     const { index } = e.currentTarget.dataset
-    const members = this.data.members
+    const members = this.members
     members[index].comment = e.detail.value
-    this.setData({ members })
+    Object.assign(this, { members })
   },
 
   onSubmit() {
@@ -121,7 +125,7 @@ Page({
       return
     }
 
-    this.setData({ submitting: true })
+    this.submitting = true
 
     // 批量提交评价
     const promises = toSubmit.map(m => {
@@ -162,14 +166,14 @@ Page({
         uni.showToast({ title: err || '提交失败', icon: 'none' })
       })
       .finally(() => {
-        this.setData({ submitting: false })
+        this.submitting = false
       })
   },
 
   onSkip() {
     uni.navigateBack()
   }
-})
+}
 
 </script>
 

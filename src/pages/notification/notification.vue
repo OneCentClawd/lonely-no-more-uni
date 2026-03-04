@@ -45,12 +45,16 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     notifications: [],
     loading: true
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     this.loadNotifications()
   },
@@ -61,7 +65,7 @@ Page({
 
   loadNotifications() {
     if (!app.globalData.userId) {
-      this.setData({ loading: false })
+      this.loading = false
       return
     }
 
@@ -76,11 +80,11 @@ Page({
             ...item,
             timeAgo: this.formatTimeAgo(item.createdAt)
           }))
-          this.setData({ notifications, loading: false })
+          this.loading = false
         }
       },
       fail: () => {
-        this.setData({ loading: false })
+        this.loading = false
       }
     })
   },
@@ -129,16 +133,16 @@ Page({
         'X-User-Id': app.globalData.userId
       },
       success: () => {
-        const notifications = this.data.notifications.map(item => ({
+        const notifications = this.notifications.map(item => ({
           ...item,
           isRead: true
         }))
-        this.setData({ notifications })
+        Object.assign(this, { notifications })
         uni.showToast({ title: '已全部已读', icon: 'success' })
       }
     })
   }
-})
+}
 
 </script>
 

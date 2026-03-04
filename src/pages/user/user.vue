@@ -142,8 +142,10 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     userId: null,
     user: null,
     activities: [],
@@ -152,12 +154,14 @@ Page({
     loading: true,
     isSelf: false,
     isBlocked: false
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad(options) {
     if (options.id) {
       const isSelf = options.id == app.globalData.userId
-      this.setData({ userId: options.id, isSelf })
+      this.userId = options.id, isSelf
       this.loadUser(options.id)
       this.loadActivities(options.id)
       this.loadReviews(options.id)
@@ -200,20 +204,18 @@ Page({
             user.birthday = `${parts[1]}月${parts[2]}日`
           }
           
-          this.setData({
-            user: user,
-            loading: false
-          })
+          this.user = user
+        this.loading = false
           uni.setNavigationBarTitle({
             title: user.nickname || '用户详情'
           })
         } else {
-          this.setData({ loading: false })
+          this.loading = false
           uni.showToast({ title: '用户不存在', icon: 'none' })
         }
       },
       fail: () => {
-        this.setData({ loading: false })
+        this.loading = false
         uni.showToast({ title: '加载失败', icon: 'none' })
       }
     })
@@ -243,7 +245,7 @@ Page({
             item.statusType = s.type
             return item
           })
-          this.setData({ activities })
+          Object.assign(this, { activities })
         }
       }
     })
@@ -255,7 +257,7 @@ Page({
       url: `${app.globalData.baseUrl}/review/user/${userId}`,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ reviews: res.data || [] })
+          this.reviews = res.data || []
         }
       }
     })
@@ -264,24 +266,25 @@ Page({
       url: `${app.globalData.baseUrl}/review/user/${userId}/stats`,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ reviewStats: res.data || { positive: 0, negative: 0 } })
+          this.reviewStats = res.data || { positive: 0
+        this.negative = 0
         }
       }
     })
   },
 
   onPreviewAvatar() {
-    if (this.data.user && this.data.user.avatar) {
+    if (this.user && this.user.avatar) {
       uni.previewImage({
-        urls: [this.data.user.avatar],
-        current: this.data.user.avatar
+        urls: [this.user.avatar],
+        current: this.user.avatar
       })
     }
   },
 
   onPreviewPhoto(e) {
     const index = e.currentTarget.dataset.index
-    const photos = this.data.user.photos
+    const photos = this.user.photos
     if (photos && photos.length > 0) {
       uni.previewImage({
         urls: photos,
@@ -303,7 +306,7 @@ Page({
       header: { 'X-User-Id': app.globalData.userId },
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ isBlocked: res.data.blocked })
+          this.isBlocked = res.data.blocked
         }
       }
     })
@@ -326,7 +329,7 @@ Page({
           },
           data: {
             targetType: 'user',
-            targetId: this.data.userId,
+            targetId: this.userId,
             reason: reason
           },
           success: (res) => {
@@ -345,7 +348,7 @@ Page({
   },
 
   onBlock() {
-    if (this.data.isBlocked) {
+    if (this.isBlocked) {
       uni.showToast({ title: '已拉黑', icon: 'none' })
       return
     }
@@ -363,11 +366,11 @@ Page({
               'X-User-Id': app.globalData.userId
             },
             data: {
-              blockedUserId: Number(this.data.userId)
+              blockedUserId: Number(this.userId)
             },
             success: (res) => {
               if (res.statusCode === 200) {
-                this.setData({ isBlocked: true })
+                this.isBlocked = true
                 uni.showToast({ title: '已拉黑', icon: 'success' })
               } else {
                 uni.showToast({ title: res.data.error || '操作失败', icon: 'none' })
@@ -381,7 +384,7 @@ Page({
       }
     })
   }
-})
+}
 
 </script>
 

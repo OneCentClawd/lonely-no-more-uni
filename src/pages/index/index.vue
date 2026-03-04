@@ -203,8 +203,10 @@ const distanceOptions = [
   { label: '50km', value: 50 }
 ]
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     categories,
     distanceOptions,
     distanceIndex: 1, // 默认10km
@@ -219,16 +221,16 @@ Page({
     showSearchPanel: false,
     recentSearches: [],
     hotSearches: []
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     // 优先使用全局位置
     if (app.globalData.latitude && app.globalData.longitude) {
-      this.setData({
-        latitude: app.globalData.latitude,
-        longitude: app.globalData.longitude,
-        locationName: app.globalData.locationName || '已保存位置'
-      })
+      this.latitude = app.globalData.latitude
+        this.longitude = app.globalData.longitude
+        this.locationName = app.globalData.locationName || '已保存位置'
       this.loadActivities()
     } else {
       this.getLocation()
@@ -239,14 +241,12 @@ Page({
     // 每次显示时检查全局位置是否变化
     const globalLat = app.globalData.latitude
     const globalLng = app.globalData.longitude
-    if (globalLat && globalLng && (globalLat !== this.data.latitude || globalLng !== this.data.longitude)) {
-      this.setData({
-        latitude: globalLat,
-        longitude: globalLng,
-        locationName: app.globalData.locationName || '已选位置'
-      })
+    if (globalLat && globalLng && (globalLat !== this.latitude || globalLng !== this.longitude)) {
+      this.latitude = globalLat
+        this.longitude = globalLng
+        this.locationName = app.globalData.locationName || '已选位置'
     }
-    if (this.data.latitude) {
+    if (this.latitude) {
       this.loadActivities()
     }
   },
@@ -262,21 +262,17 @@ Page({
       type: 'gcj02',
       success: (res) => {
         app.updateLocation(res.latitude, res.longitude, '当前位置')
-        this.setData({
-          latitude: res.latitude,
-          longitude: res.longitude,
-          locationName: '当前位置'
-        })
+        this.latitude = res.latitude
+        this.longitude = res.longitude
+        this.locationName = '当前位置'
         this.loadActivities()
       },
       fail: () => {
         // 定位失败，使用默认位置（北京）
         app.updateLocation(39.9042, 116.4074, '北京')
-        this.setData({
-          latitude: 39.9042,
-          longitude: 116.4074,
-          locationName: '北京'
-        })
+        this.latitude = 39.9042
+        this.longitude = 116.4074
+        this.locationName = '北京'
         this.loadActivities()
         uni.showToast({ title: '定位失败，显示北京', icon: 'none' })
       }
@@ -284,7 +280,7 @@ Page({
   },
 
   loadActivities() {
-    this.setData({ loading: true })
+    this.loading = true
     
     const { latitude, longitude, selectedCategory, distanceOptions, distanceIndex } = this.data
     const radius = distanceOptions[distanceIndex].value
@@ -332,11 +328,11 @@ Page({
             isExpired: item.status >= 3
           }))
           
-          this.setData({ activities, loading: false })
+          this.loading = false
           resolve()
         },
         fail: () => {
-          this.setData({ activities: [], loading: false })
+          this.activities = [], loading: false
           uni.showToast({ title: '加载失败', icon: 'none' })
           resolve()
         }
@@ -381,33 +377,30 @@ Page({
 
   onCategoryTap(e) {
     const index = e.currentTarget.dataset.index
-    const categories = this.data.categories.map((item, i) => ({
+    const categories = this.categories.map((item, i) => ({
       ...item,
       active: i === index
     }))
-    this.setData({ 
-      categories,
-      selectedCategory: categories[index].name,
-      searchKeyword: '',
-      isSearching: false
-    })
+    this.selectedCategory = categories[index].name
+        this.searchKeyword = ''
+        this.isSearching = false
     this.loadActivities()
   },
 
   onSearchInput(e) {
-    this.setData({ searchKeyword: e.detail.value })
+    this.searchKeyword = e.detail.value
   },
 
   onSearchFocus() {
     // 获取搜索建议
     this.loadSearchSuggestions()
-    this.setData({ showSearchPanel: true })
+    this.showSearchPanel = true
   },
 
   onSearchBlur() {
     // 延迟隐藏，让点击事件先触发
     setTimeout(() => {
-      this.setData({ showSearchPanel: false })
+      this.showSearchPanel = false
     }, 200)
   },
 
@@ -422,10 +415,8 @@ Page({
       header: headers,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({
-            recentSearches: res.data.recent || [],
-            hotSearches: res.data.hot || []
-          })
+          this.recentSearches = res.data.recent || []
+        this.hotSearches = res.data.hot || []
         }
       }
     })
@@ -433,7 +424,7 @@ Page({
 
   onSuggestionTap(e) {
     const keyword = e.currentTarget.dataset.keyword
-    this.setData({ searchKeyword: keyword, showSearchPanel: false })
+    this.searchKeyword = keyword, showSearchPanel: false
     this.onSearch()
   },
 
@@ -446,7 +437,7 @@ Page({
       method: 'DELETE',
       header: { 'X-User-Id': userId },
       success: () => {
-        this.setData({ recentSearches: [] })
+        this.recentSearches = []
         uni.showToast({ title: '已清空', icon: 'success' })
       }
     })
@@ -455,12 +446,12 @@ Page({
   onSearch() {
     const { searchKeyword } = this.data
     if (!searchKeyword.trim()) {
-      this.setData({ isSearching: false })
+      this.isSearching = false
       this.loadActivities()
       return
     }
     
-    this.setData({ loading: true, isSearching: true, showSearchPanel: false })
+    this.loading = true, isSearching: true, showSearchPanel: false
     
     const headers = {}
     if (app.globalData.userId) {
@@ -481,7 +472,7 @@ Page({
         activities = activities.map(item => ({
           ...item,
           categoryIcon: categoryIcons[item.category] || '💡',
-          distance: this.data.latitude ? this.calculateDistance(item.latitude, item.longitude) : '',
+          distance: this.latitude ? this.calculateDistance(item.latitude, item.longitude) : '',
           startTime: this.formatTime(item.startTime),
           creatorAvatar: (item.creatorAvatar && item.creatorAvatar.trim()) ? item.creatorAvatar : '/images/default-avatar.jpg',
           creatorName: item.creatorNickname || '用户' + item.creatorId,
@@ -490,17 +481,17 @@ Page({
           isExpired: item.status >= 3
         }))
         
-        this.setData({ activities, loading: false })
+        this.loading = false
       },
       fail: () => {
-        this.setData({ activities: [], loading: false })
+        this.activities = [], loading: false
         uni.showToast({ title: '搜索失败', icon: 'none' })
       }
     })
   },
 
   onClearSearch() {
-    this.setData({ searchKeyword: '', isSearching: false })
+    this.searchKeyword = '', isSearching: false
     this.loadActivities()
   },
 
@@ -515,11 +506,9 @@ Page({
       success: (res) => {
         const name = res.name || res.address || '已选位置'
         app.updateLocation(res.latitude, res.longitude, name)
-        this.setData({
-          latitude: res.latitude,
-          longitude: res.longitude,
-          locationName: name
-        })
+        this.latitude = res.latitude
+        this.longitude = res.longitude
+        this.locationName = name
         this.loadActivities()
       },
       fail: (err) => {
@@ -532,7 +521,7 @@ Page({
   },
 
   onDistanceChange(e) {
-    this.setData({ distanceIndex: e.detail.value })
+    this.distanceIndex = e.detail.value
     this.loadActivities()
   },
 
@@ -564,7 +553,7 @@ Page({
       path: '/pages/index/index'
     }
   }
-})
+}
 
 </script>
 

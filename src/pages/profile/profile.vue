@@ -120,8 +120,10 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     isLoggedIn: false,
     user: null,
     myActivities: [],
@@ -129,17 +131,19 @@ Page({
     loading: true,
     unreadCount: 0,
     isVerified: false
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     // 检查登录状态
     const userId = app.globalData.userId
     if (userId) {
-      this.setData({ isLoggedIn: true })
+      this.isLoggedIn = true
       this.loadUser()
       this.loadVerifyStatus()
     } else {
-      this.setData({ loading: false })
+      this.loading = false
     }
   },
 
@@ -154,7 +158,7 @@ Page({
         if (res.statusCode === 200) {
           const { realNameStatus, studentStatus } = res.data
           // 任一认证通过即为已认证
-          this.setData({ isVerified: realNameStatus === 2 || studentStatus === 2 })
+          this.isVerified = realNameStatus === 2 || studentStatus === 2
         }
       }
     })
@@ -163,8 +167,8 @@ Page({
   onShow() {
     // 每次显示页面时检查登录状态（可能从 setup 页面返回）
     const userId = app.globalData.userId
-    if (userId && !this.data.isLoggedIn) {
-      this.setData({ isLoggedIn: true })
+    if (userId && !this.isLoggedIn) {
+      this.isLoggedIn = true
       this.loadUser()
     }
     if (userId) {
@@ -192,7 +196,7 @@ Page({
   loadUser() {
     const userId = app.globalData.userId
     if (!userId) {
-      this.setData({ loading: false })
+      this.loading = false
       return
     }
 
@@ -202,19 +206,16 @@ Page({
       success: (res) => {
         if (res.statusCode === 200) {
           const user = res.data
-          this.setData({
-            isLoggedIn: true,
-            user: {
-              ...user,
-              avatar: user.avatar || '/images/default-avatar.jpg',
-              nickname: user.nickname || '用户' + user.id,
-              interests: user.interests ? JSON.parse(user.interests) : []
-            }
-          })
+          this.isLoggedIn = true
+        this.user = {
+              ...user
+        this.avatar = user.avatar || '/images/default-avatar.jpg'
+        this.nickname = user.nickname || '用户' + user.id
+        this.interests = user.interests ? JSON.parse(user.interests) : []
         }
       },
       complete: () => {
-        this.setData({ loading: false })
+        this.loading = false
       }
     })
   },
@@ -247,7 +248,7 @@ Page({
             unreadCount: 0
           }))
 
-          this.setData({ myActivities: activities })
+          this.myActivities = activities
           
           // 加载每个活动的未读消息数
           this.loadUnreadCounts(activities)
@@ -267,7 +268,7 @@ Page({
         success: (res) => {
           if (res.statusCode === 200 && res.data.count > 0) {
             const key = `myActivities[${index}].unreadCount`
-            this.setData({ [key]: res.data.count })
+            Object.assign(this, { [key]: res.data.count })
           }
         }
       })
@@ -292,9 +293,7 @@ Page({
   },
 
   onTabChange(e) {
-    this.setData({ activeTab: parseInt(e.currentTarget.dataset.index) }, () => {
-      this.loadMyActivities()
-    })
+    this.activeTab = parseInt(e.currentTarget.dataset.index)
   },
 
   onActivityTap(e) {
@@ -326,7 +325,7 @@ Page({
         uni.hideLoading()
         if (res.statusCode === 200) {
           uni.showToast({ title: '保存成功', icon: 'success' })
-          this.setData({
+          Object.assign(this, {
             'user.nickname': nickname
           })
           // 更新全局用户信息
@@ -377,7 +376,7 @@ Page({
       header: { 'X-User-Id': userId },
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ unreadCount: res.data.count || 0 })
+          this.unreadCount = res.data.count || 0
         }
       }
     })
@@ -410,7 +409,7 @@ Page({
               uni.setStorageSync('userInfo', user)
               
               // 更新页面状态
-              this.setData({ isLoggedIn: true })
+              this.isLoggedIn = true
               
               if (res.data.isNewUser) {
                 // 新用户跳转资料完善页
@@ -465,7 +464,7 @@ Page({
       }
     })
   }
-})
+}
 
 </script>
 

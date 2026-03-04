@@ -38,12 +38,16 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     templates: [],
     loading: true
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     this.loadTemplates()
   },
@@ -55,7 +59,7 @@ Page({
   loadTemplates() {
     const userId = app.globalData.userId
     if (!userId) {
-      this.setData({ loading: false })
+      this.loading = false
       return
     }
 
@@ -64,11 +68,11 @@ Page({
       header: { 'X-User-Id': userId },
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ templates: res.data || [] })
+          this.templates = res.data || []
         }
       },
       complete: () => {
-        this.setData({ loading: false })
+        this.loading = false
       }
     })
   },
@@ -107,7 +111,7 @@ Page({
       }
     })
   }
-})
+}
 
 </script>
 

@@ -51,21 +51,25 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     activeTab: 'credit',
     list: [],
     loading: true
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     this.loadLeaderboard()
   },
 
   onTabChange(e) {
     const type = e.currentTarget.dataset.type
-    if (type !== this.data.activeTab) {
-      this.setData({ activeTab: type, list: [], loading: true })
+    if (type !== this.activeTab) {
+      this.activeTab = type, list: [], loading: true
       this.loadLeaderboard()
     }
   },
@@ -77,11 +81,11 @@ Page({
       url: `${app.globalData.baseUrl}/user/leaderboard?type=${activeTab}`,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ list: res.data || [] })
+          this.list = res.data || []
         }
       },
       complete: () => {
-        this.setData({ loading: false })
+        this.loading = false
       }
     })
   },
@@ -92,7 +96,7 @@ Page({
       url: `/pages/user/user?id=${userId}`
     })
   }
-})
+}
 
 </script>
 

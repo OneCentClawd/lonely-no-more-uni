@@ -138,8 +138,10 @@ const zodiacSigns = [
   { name: '摩羯座', start: [12, 22], end: [1, 19] }
 ]
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     avatar: '/images/default-avatar.jpg',
     nickname: '',
     gender: 0, // 0未知 1男 2女
@@ -152,11 +154,13 @@ Page({
     interestOptions,
     submitting: false,
     isEdit: false
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad(options) {
     const isEdit = options.mode === 'edit'
-    this.setData({ isEdit })
+    Object.assign(this, { isEdit })
     
     // 预填已有信息
     const userInfo = app.globalData.userInfo
@@ -165,17 +169,15 @@ Page({
       const selectedMap = {}
       interests.forEach(item => selectedMap[item] = true)
       
-      this.setData({
-        avatar: userInfo.avatar || '/images/default-avatar.jpg',
-        nickname: userInfo.nickname || '',
-        gender: userInfo.gender || 0,
-        selectedInterests: interests,
+      this.avatar = userInfo.avatar || '/images/default-avatar.jpg'
+        this.nickname = userInfo.nickname || ''
+        this.gender = userInfo.gender || 0
+        this.selectedInterests = interests,
         selectedMap,
         birthday: userInfo.birthday || '',
         zodiac: userInfo.zodiac || '',
         bio: userInfo.bio || '',
         photos: userInfo.photos ? JSON.parse(userInfo.photos) : []
-      })
     }
   },
 
@@ -186,7 +188,7 @@ Page({
       sourceType: ['album', 'camera'],
       success: (res) => {
         const tempFilePath = res.tempFiles[0].tempFilePath
-        this.setData({ avatar: tempFilePath })
+        this.avatar = tempFilePath
         
         // 上传到服务器
         this.uploadAvatar(tempFilePath)
@@ -211,7 +213,7 @@ Page({
           const fullUrl = data.url.startsWith('http') 
             ? data.url 
             : app.globalData.baseUrl.replace('/api', '') + data.url
-          this.setData({ avatar: fullUrl })
+          this.avatar = fullUrl
           uni.showToast({ title: '头像上传成功', icon: 'success' })
         } else {
           uni.showToast({ title: data.error || '上传失败', icon: 'none' })
@@ -225,17 +227,17 @@ Page({
   },
 
   onNicknameInput(e) {
-    this.setData({ nickname: e.detail.value })
+    this.nickname = e.detail.value
   },
 
   onGenderChange(e) {
-    this.setData({ gender: parseInt(e.detail.value) })
+    this.gender = parseInt(e.detail.value)
   },
 
   onBirthdayChange(e) {
     const birthday = e.detail.value
     const zodiac = this.getZodiac(birthday)
-    this.setData({ birthday, zodiac })
+    Object.assign(this, { birthday, zodiac })
   },
 
   getZodiac(dateStr) {
@@ -268,7 +270,7 @@ Page({
   },
 
   onBioInput(e) {
-    this.setData({ bio: e.detail.value })
+    this.bio = e.detail.value
   },
 
   onInterestTap(e) {
@@ -290,7 +292,7 @@ Page({
       selectedMap = { ...selectedMap, [interest]: true }
     }
     
-    this.setData({ selectedInterests, selectedMap })
+    Object.assign(this, { selectedInterests, selectedMap })
   },
 
   onAddPhoto() {
@@ -325,8 +327,8 @@ Page({
       success: (res) => {
         const data = JSON.parse(res.data)
         if (data.url) {
-          const photos = [...this.data.photos, data.url]
-          this.setData({ photos })
+          const photos = [...this.photos, data.url]
+          Object.assign(this, { photos })
         }
       },
       fail: () => {
@@ -341,8 +343,8 @@ Page({
   onPreviewPhoto(e) {
     const index = e.currentTarget.dataset.index
     uni.previewImage({
-      urls: this.data.photos,
-      current: this.data.photos[index]
+      urls: this.photos,
+      current: this.photos[index]
     })
   },
 
@@ -352,9 +354,9 @@ Page({
       itemList: ['删除这张照片'],
       success: (res) => {
         if (res.tapIndex === 0) {
-          const photos = [...this.data.photos]
+          const photos = [...this.photos]
           photos.splice(index, 1)
-          this.setData({ photos })
+          Object.assign(this, { photos })
         }
       }
     })
@@ -370,7 +372,7 @@ Page({
       return
     }
     
-    this.setData({ submitting: true })
+    this.submitting = true
     
     uni.request({
       url: `${app.globalData.baseUrl}/user/profile`,
@@ -409,7 +411,7 @@ Page({
         uni.showToast({ title: '网络错误', icon: 'none' })
       },
       complete: () => {
-        this.setData({ submitting: false })
+        this.submitting = false
       }
     })
   },
@@ -417,7 +419,7 @@ Page({
   onSkip() {
     uni.switchTab({ url: '/pages/index/index' })
   }
-})
+}
 
 </script>
 

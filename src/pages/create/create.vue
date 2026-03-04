@@ -177,8 +177,10 @@ const categories = [
   { name: '其他', icon: '💡' }
 ]
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     categories,
     selectedCategory: null,
     title: '',
@@ -196,8 +198,10 @@ Page({
     times: [],
     submitting: false,
     templates: []
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad(options) {
     this.initDateTime()
     this.loadTemplates()
@@ -230,18 +234,16 @@ Page({
           const t = res.data
           const categoryIndex = categories.findIndex(c => c.name === t.category)
           
-          this.setData({
-            selectedCategory: categoryIndex >= 0 ? categoryIndex : null,
-            title: t.title || '',
-            description: t.description || '',
-            coverImage: t.coverImage || '',
+          this.selectedCategory = categoryIndex >= 0 ? categoryIndex : null
+        this.title = t.title || ''
+        this.description = t.description || ''
+        this.coverImage = t.coverImage || '',
             address: t.address || '',
             latitude: t.latitude,
             longitude: t.longitude,
             maxMembers: t.maxMembers || 4,
             feeType: t.feeType || 'free',
             feeAmount: t.feeAmount ? String(t.feeAmount) : ''
-          })
           
           uni.showToast({ title: '已应用模板', icon: 'success' })
         }
@@ -258,7 +260,7 @@ Page({
       header: { 'X-User-Id': userId },
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ templates: res.data || [] })
+          this.templates = res.data || []
         }
       }
     })
@@ -278,18 +280,16 @@ Page({
           // 找到分类索引
           const categoryIndex = categories.findIndex(c => c.name === t.category)
           
-          this.setData({
-            selectedCategory: categoryIndex >= 0 ? categoryIndex : null,
-            title: t.title || '',
-            description: t.description || '',
-            coverImage: t.coverImage || '',
+          this.selectedCategory = categoryIndex >= 0 ? categoryIndex : null
+        this.title = t.title || ''
+        this.description = t.description || ''
+        this.coverImage = t.coverImage || '',
             address: t.address || '',
             latitude: t.latitude,
             longitude: t.longitude,
             maxMembers: t.maxMembers || 4,
             feeType: t.feeType || 'free',
             feeAmount: t.feeAmount ? String(t.feeAmount) : ''
-          })
           
           uni.showToast({ title: '已应用模板', icon: 'success' })
         }
@@ -322,20 +322,20 @@ Page({
       times.push({ label: `${h}:30`, value: `${h.toString().padStart(2, '0')}:30:00` })
     }
 
-    this.setData({ dates, times })
+    Object.assign(this, { dates, times })
   },
 
   onCategoryTap(e) {
     const index = e.currentTarget.dataset.index
-    this.setData({ selectedCategory: index })
+    this.selectedCategory = index
   },
 
   onTitleInput(e) {
-    this.setData({ title: e.detail.value })
+    this.title = e.detail.value
   },
 
   onDescInput(e) {
-    this.setData({ description: e.detail.value })
+    this.description = e.detail.value
   },
 
   onChooseCover() {
@@ -366,7 +366,7 @@ Page({
               const fullUrl = data.url.startsWith('http') 
                 ? data.url 
                 : app.globalData.baseUrl.replace('/api', '') + data.url
-              this.setData({ coverImage: fullUrl })
+              this.coverImage = fullUrl
             } else {
               uni.showToast({ title: '上传失败', icon: 'none' })
             }
@@ -380,17 +380,15 @@ Page({
   },
 
   onDeleteCover() {
-    this.setData({ coverImage: '' })
+    this.coverImage = ''
   },
 
   onChooseLocation() {
     uni.chooseLocation({
       success: (res) => {
-        this.setData({
-          address: res.name || res.address,
-          latitude: res.latitude,
-          longitude: res.longitude
-        })
+        this.address = res.name || res.address
+        this.latitude = res.latitude
+        this.longitude = res.longitude
       },
       fail: (err) => {
         console.log('chooseLocation fail:', err)
@@ -401,11 +399,9 @@ Page({
           placeholderText: '请输入活动地点',
           success: (res) => {
             if (res.confirm && res.content) {
-              this.setData({
-                address: res.content,
-                latitude: 39.9,  // 默认北京坐标
+              this.address = res.content
+        this.latitude = 39.9,  // 默认北京坐标
                 longitude: 116.4
-              })
             }
           }
         })
@@ -414,35 +410,35 @@ Page({
   },
 
   onDateChange(e) {
-    this.setData({ dateIndex: e.detail.value })
+    this.dateIndex = e.detail.value
   },
 
   onTimeChange(e) {
-    this.setData({ timeIndex: e.detail.value })
+    this.timeIndex = e.detail.value
   },
 
   onMembersMinus() {
-    if (this.data.maxMembers > 2) {
-      this.setData({ maxMembers: this.data.maxMembers - 1 })
+    if (this.maxMembers > 2) {
+      this.maxMembers = this.maxMembers - 1
     }
   },
 
   onMembersPlus() {
-    if (this.data.maxMembers < 20) {
-      this.setData({ maxMembers: this.data.maxMembers + 1 })
+    if (this.maxMembers < 20) {
+      this.maxMembers = this.maxMembers + 1
     }
   },
 
   onMemberChange(e) {
-    this.setData({ maxMembers: e.detail.value })
+    this.maxMembers = e.detail.value
   },
 
   onFeeTypeChange(e) {
-    this.setData({ feeType: e.detail.value })
+    this.feeType = e.detail.value
   },
 
   onFeeAmountInput(e) {
-    this.setData({ feeAmount: e.detail.value })
+    this.feeAmount = e.detail.value
   },
 
   onSubmit() {
@@ -490,7 +486,7 @@ Page({
       }
     }
 
-    this.setData({ submitting: true })
+    this.submitting = true
 
     uni.request({
       url: `${app.globalData.baseUrl}/activity`,
@@ -528,11 +524,11 @@ Page({
         uni.showToast({ title: '网络错误', icon: 'none' })
       },
       complete: () => {
-        this.setData({ submitting: false })
+        this.submitting = false
       }
     })
   }
-})
+}
 
 </script>
 

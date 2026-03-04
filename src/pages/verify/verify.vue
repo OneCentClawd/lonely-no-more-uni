@@ -92,8 +92,10 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     realNameStatus: 0,  // 0未认证 1审核中 2已认证 3已拒绝
     studentStatus: 0,
     realNameStatusText: '未认证',
@@ -106,8 +108,10 @@ Page({
     verifiedSchool: '',
     rejectReason: '',
     submitting: false
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     this.loadStatus()
   },
@@ -126,15 +130,13 @@ Page({
       success: (res) => {
         if (res.statusCode === 200) {
           const data = res.data
-          this.setData({
-            realNameStatus: data.realNameStatus || 0,
-            studentStatus: data.studentStatus || 0,
-            realNameStatusText: this.getStatusText(data.realNameStatus || 0),
-            studentStatusText: this.getStatusText(data.studentStatus || 0),
+          this.realNameStatus = data.realNameStatus || 0
+        this.studentStatus = data.studentStatus || 0
+        this.realNameStatusText = this.getStatusText(data.realNameStatus || 0)
+        this.studentStatusText = this.getStatusText(data.studentStatus || 0),
             realNameLast4: data.realNameLast4 || '',
             verifiedSchool: data.school || '',
             rejectReason: data.rejectReason || ''
-          })
         }
       }
     })
@@ -146,15 +148,15 @@ Page({
   },
 
   onRealNameInput(e) {
-    this.setData({ realName: e.detail.value })
+    this.realName = e.detail.value
   },
 
   onIdCardInput(e) {
-    this.setData({ idCard: e.detail.value.toUpperCase() })
+    this.idCard = e.detail.value.toUpperCase()
   },
 
   onSchoolInput(e) {
-    this.setData({ school: e.detail.value })
+    this.school = e.detail.value
   },
 
   uploadStudentCard() {
@@ -174,7 +176,7 @@ Page({
           success: (uploadRes) => {
             const data = JSON.parse(uploadRes.data)
             if (data.url) {
-              this.setData({ studentCardImage: data.url })
+              this.studentCardImage = data.url
             }
           },
           complete: () => {
@@ -198,7 +200,7 @@ Page({
       return
     }
     
-    this.setData({ submitting: true })
+    this.submitting = true
     
     uni.request({
       url: `${app.globalData.baseUrl}/verification/real-name`,
@@ -220,7 +222,7 @@ Page({
         uni.showToast({ title: '网络错误', icon: 'none' })
       },
       complete: () => {
-        this.setData({ submitting: false })
+        this.submitting = false
       }
     })
   },
@@ -238,7 +240,7 @@ Page({
       return
     }
     
-    this.setData({ submitting: true })
+    this.submitting = true
     
     uni.request({
       url: `${app.globalData.baseUrl}/verification/student`,
@@ -260,11 +262,11 @@ Page({
         uni.showToast({ title: '网络错误', icon: 'none' })
       },
       complete: () => {
-        this.setData({ submitting: false })
+        this.submitting = false
       }
     })
   }
-})
+}
 
 </script>
 

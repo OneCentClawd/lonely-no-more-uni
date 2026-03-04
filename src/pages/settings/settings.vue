@@ -91,8 +91,10 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     settings: {
       showLocation: true,
       allowStrangerMessage: true,
@@ -101,8 +103,10 @@ Page({
     },
     cacheSize: '0KB',
     version: '1.0.0'
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     this.loadSettings()
     this.calculateCacheSize()
@@ -110,12 +114,12 @@ Page({
 
   loadSettings() {
     // 从本地存储加载设置
-    const settings = uni.getStorageSync('userSettings') || this.data.settings
-    this.setData({ settings })
+    const settings = uni.getStorageSync('userSettings') || this.settings
+    Object.assign(this, { settings })
   },
 
   saveSettings() {
-    uni.setStorageSync('userSettings', this.data.settings)
+    uni.setStorageSync('userSettings', this.settings)
   },
 
   calculateCacheSize() {
@@ -128,37 +132,37 @@ Page({
       } else {
         cacheSize = (sizeKB / 1024).toFixed(2) + 'MB'
       }
-      this.setData({ cacheSize })
+      Object.assign(this, { cacheSize })
     } catch (e) {
       console.log('获取缓存大小失败', e)
     }
   },
 
   onShowLocationChange(e) {
-    const settings = this.data.settings
+    const settings = this.settings
     settings.showLocation = e.detail.value
-    this.setData({ settings })
+    Object.assign(this, { settings })
     this.saveSettings()
   },
 
   onAllowStrangerMessageChange(e) {
-    const settings = this.data.settings
+    const settings = this.settings
     settings.allowStrangerMessage = e.detail.value
-    this.setData({ settings })
+    Object.assign(this, { settings })
     this.saveSettings()
   },
 
   onActivityNotifyChange(e) {
-    const settings = this.data.settings
+    const settings = this.settings
     settings.activityNotify = e.detail.value
-    this.setData({ settings })
+    Object.assign(this, { settings })
     this.saveSettings()
   },
 
   onChatNotifyChange(e) {
-    const settings = this.data.settings
+    const settings = this.settings
     settings.chatNotify = e.detail.value
-    this.setData({ settings })
+    Object.assign(this, { settings })
     this.saveSettings()
   },
 
@@ -226,7 +230,7 @@ Page({
       }
     })
   }
-})
+}
 
 </script>
 

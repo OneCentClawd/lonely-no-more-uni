@@ -119,8 +119,10 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     activityId: null,
     activityTitle: '',
     memberCount: 0,
@@ -133,10 +135,12 @@ Page({
     connecting: false,
     loading: false,
     keyboardHeight: 0
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad(options) {
-    this.setData({ activityId: options.id })
+    this.activityId = options.id
     this.loadActivityInfo()
     this.loadHistory()
     this.connectWebSocket()
@@ -166,7 +170,7 @@ Page({
 
   onShow() {
     // 如果断开了，重新连接
-    if (!this.data.socketOpen && !this.data.connecting) {
+    if (!this.socketOpen && !this.connecting) {
       this.connectWebSocket()
     }
   },
@@ -185,11 +189,9 @@ Page({
           const activity = data.activity || data
           const members = data.members || []
           const title = activity.title || '群聊'
-          this.setData({
-            activityTitle: title,
-            memberCount: members.length || activity.currentMembers || 0,
-            members: members
-          })
+          this.activityTitle = title
+        this.memberCount = members.length || activity.currentMembers || 0
+        this.members = members
           // 设置导航栏标题为活动名称
           uni.setNavigationBarTitle({ title })
         }
@@ -206,10 +208,7 @@ Page({
         if (res.statusCode === 200 && Array.isArray(res.data)) {
           const myUserId = parseInt(app.globalData.userId)
           const messages = this.processMessages(res.data, myUserId)
-          this.setData({
-            messages,
-            scrollToMessage: messages.length > 0 ? `msg-${messages[messages.length - 1].id}` : ''
-          })
+          this.scrollToMessage = messages.length > 0 ? `msg-${messages[messages.length - 1].id
           // 标记所有消息已读
           this.markAllAsRead()
         }
@@ -288,7 +287,7 @@ Page({
       return
     }
 
-    this.setData({ connecting: true })
+    this.connecting = true
 
     // 单连接模式：不带 activityId，消息里路由
     const wsUrl = app.globalData.wsUrl
@@ -296,13 +295,13 @@ Page({
     uni.connectSocket({ url: wsUrl })
 
     uni.onSocketOpen(() => {
-      this.setData({ socketOpen: true, connecting: false })
+      this.socketOpen = true, connecting: false
       // 加入房间
       uni.sendSocketMessage({
         data: JSON.stringify({
           type: 'join',
           userId: app.globalData.userId,
-          activityId: parseInt(this.data.activityId)
+          activityId: parseInt(this.activityId)
         })
       })
     })
@@ -317,7 +316,7 @@ Page({
         // 判断是否显示时间分隔线
         let showTimeDivider = false
         let timeDividerText = ''
-        const lastMsg = this.data.messages[this.data.messages.length - 1]
+        const lastMsg = this.messages[this.messages.length - 1]
         if (!lastMsg || !lastMsg.createdAt) {
           showTimeDivider = true
           timeDividerText = this.formatTimeDivider(new Date())
@@ -338,10 +337,8 @@ Page({
           timeDividerText
         }
         console.log('WebSocket消息 - senderId:', senderId, 'myUserId:', myUserId, 'isMine:', senderId === myUserId)
-        this.setData({
-          messages: [...this.data.messages, newMessage],
-          scrollToMessage: `msg-${msg.id}`
-        })
+        this.messages = [...this.messages
+        this.scrollToMessage = `msg-${msg.id
         
         // 非自己的消息自动标记已读
         if (senderId !== myUserId && msg.id) {
@@ -359,47 +356,45 @@ Page({
           content: data.content,
           createdAt: this.formatTime(new Date().toISOString())
         }
-        this.setData({
-          messages: [...this.data.messages, sysMessage]
-        })
+        this.messages = [...this.messages, sysMessage]
       }
     })
 
     uni.onSocketClose(() => {
-      this.setData({ socketOpen: false, connecting: false })
+      this.socketOpen = false, connecting: false
     })
 
     uni.onSocketError(() => {
-      this.setData({ socketOpen: false, connecting: false })
+      this.socketOpen = false, connecting: false
       uni.showToast({ title: '连接失败', icon: 'none' })
     })
   },
 
   closeWebSocket() {
-    if (this.data.socketOpen) {
+    if (this.socketOpen) {
       uni.sendSocketMessage({
         data: JSON.stringify({
           type: 'leave',
           userId: app.globalData.userId,
-          activityId: parseInt(this.data.activityId)
+          activityId: parseInt(this.activityId)
         })
       })
       uni.closeSocket()
-      this.setData({ socketOpen: false })
+      this.socketOpen = false
     }
   },
 
   onShowMembers() {
-    this.setData({ showMembersModal: true })
+    this.showMembersModal = true
   },
 
   onHideMembers() {
-    this.setData({ showMembersModal: false })
+    this.showMembersModal = false
   },
 
   onMemberTap(e) {
     const userId = e.currentTarget.dataset.userid
-    this.setData({ showMembersModal: false })
+    this.showMembersModal = false
     uni.navigateTo({
       url: `/pages/user/user?id=${userId}`
     })
@@ -415,26 +410,26 @@ Page({
   },
 
   onInputFocus(e) {
-    this.setData({ keyboardHeight: e.detail.height || 0 })
+    this.keyboardHeight = e.detail.height || 0
     // 滚动到底部
     setTimeout(() => {
-      if (this.data.messages.length > 0) {
-        const lastMsg = this.data.messages[this.data.messages.length - 1]
-        this.setData({ scrollToMessage: 'msg-' + lastMsg.id })
+      if (this.messages.length > 0) {
+        const lastMsg = this.messages[this.messages.length - 1]
+        this.scrollToMessage = 'msg-' + lastMsg.id
       }
     }, 100)
   },
 
   onInputBlur() {
-    this.setData({ keyboardHeight: 0 })
+    this.keyboardHeight = 0
   },
 
   onInput(e) {
-    this.setData({ inputValue: e.detail.value })
+    this.inputValue = e.detail.value
   },
 
   onSend() {
-    const content = this.data.inputValue.trim()
+    const content = this.inputValue.trim()
     if (!content) return
 
     if (!app.globalData.userId) {
@@ -442,16 +437,16 @@ Page({
       return
     }
 
-    if (this.data.socketOpen) {
+    if (this.socketOpen) {
       uni.sendSocketMessage({
         data: JSON.stringify({
           type: 'message',
-          activityId: parseInt(this.data.activityId),
+          activityId: parseInt(this.activityId),
           senderId: app.globalData.userId,
           content
         })
       })
-      this.setData({ inputValue: '' })
+      this.inputValue = ''
     } else {
       uni.showToast({ title: '连接已断开', icon: 'none' })
       this.connectWebSocket()
@@ -495,11 +490,11 @@ Page({
               const imageUrl = data.url
               
               // 通过 WebSocket 发送图片消息
-              if (this.data.socketOpen) {
+              if (this.socketOpen) {
                 uni.sendSocketMessage({
                   data: JSON.stringify({
                     type: 'image',
-                    activityId: parseInt(this.data.activityId),
+                    activityId: parseInt(this.activityId),
                     senderId: app.globalData.userId,
                     imageUrl: imageUrl
                   })
@@ -527,7 +522,7 @@ Page({
       })
     }
   }
-})
+}
 
 </script>
 

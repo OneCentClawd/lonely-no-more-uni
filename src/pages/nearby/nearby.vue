@@ -53,8 +53,10 @@
 <script>
 const app = getApp()
 
-Page({
-  data: {
+
+export default {
+  data() {
+    return {
     users: [],
     loading: true,
     latitude: null,
@@ -67,15 +69,15 @@ Page({
       { label: '50公里', value: 50 }
     ],
     radiusIndex: 2  // 默认10公里
+    }
   },
-
+  
+  // 生命周期映射: onLoad → onLoad (uni-app 保留), onShow → onShow
   onLoad() {
     // 优先使用全局位置
     if (app.globalData.latitude && app.globalData.longitude) {
-      this.setData({
-        latitude: app.globalData.latitude,
-        longitude: app.globalData.longitude
-      })
+      this.latitude = app.globalData.latitude
+        this.longitude = app.globalData.longitude
       this.loadNearbyUsers()
     } else {
       this.getLocation()
@@ -86,18 +88,14 @@ Page({
     uni.getLocation({
       type: 'gcj02',
       success: (res) => {
-        this.setData({
-          latitude: res.latitude,
-          longitude: res.longitude
-        })
+        this.latitude = res.latitude
+        this.longitude = res.longitude
         this.loadNearbyUsers()
       },
       fail: () => {
         // 定位失败，使用默认位置（北京）
-        this.setData({
-          latitude: 39.9042,
-          longitude: 116.4074
-        })
+        this.latitude = 39.9042
+        this.longitude = 116.4074
         this.loadNearbyUsers()
         uni.showToast({ title: '定位失败，显示北京附近', icon: 'none' })
       }
@@ -105,7 +103,7 @@ Page({
   },
 
   onRadiusChange(e) {
-    this.setData({ radiusIndex: e.detail.value, loading: true })
+    this.radiusIndex = e.detail.value, loading: true
     this.loadNearbyUsers()
   },
 
@@ -122,11 +120,11 @@ Page({
       header: { 'X-User-Id': userId },
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ users: res.data || [] })
+          this.users = res.data || []
         }
       },
       complete: () => {
-        this.setData({ loading: false })
+        this.loading = false
       }
     })
   },
@@ -137,7 +135,7 @@ Page({
       url: `/pages/user/user?id=${userId}`
     })
   }
-})
+}
 
 </script>
 
