@@ -256,12 +256,12 @@ export default {
               members: members.map(m => ({
                 ...m,
                 nickname: m.nickname || '用户' + m.userId,
-                avatar: m.avatar || '/images/default-avatar.jpg'
+                avatar: m.avatar || '/static/images/default-avatar.jpg'
               })),
               creator: {
                 id: activity.creatorId,
                 nickname: activity.creatorNickname || '用户' + activity.creatorId,
-                avatar: activity.creatorAvatar || '/images/default-avatar.jpg',
+                avatar: activity.creatorAvatar || '/static/images/default-avatar.jpg',
                 creditScore: 100
               }
             }

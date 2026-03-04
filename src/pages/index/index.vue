@@ -389,7 +389,7 @@ export default {
             categoryIcon: categoryIcons[item.category] || '💡',
             distance: this.calculateDistance(item.latitude, item.longitude),
             startTime: this.formatTime(item.startTime),
-            creatorAvatar: (item.creatorAvatar && item.creatorAvatar.trim()) ? item.creatorAvatar : '/images/default-avatar.jpg',
+            creatorAvatar: (item.creatorAvatar && item.creatorAvatar.trim()) ? item.creatorAvatar : '/static/images/default-avatar.jpg',
             creatorName: item.creatorNickname || '用户' + item.creatorId,
             isFull: item.currentMembers >= item.maxMembers,
             // status: 0招募中 1已满员 2进行中 3已结束 4已取消
@@ -546,7 +546,7 @@ export default {
           categoryIcon: categoryIcons[item.category] || '💡',
           distance: this.latitude ? this.calculateDistance(item.latitude, item.longitude) : '',
           startTime: this.formatTime(item.startTime),
-          creatorAvatar: (item.creatorAvatar && item.creatorAvatar.trim()) ? item.creatorAvatar : '/images/default-avatar.jpg',
+          creatorAvatar: (item.creatorAvatar && item.creatorAvatar.trim()) ? item.creatorAvatar : '/static/images/default-avatar.jpg',
           creatorName: item.creatorNickname || '用户' + item.creatorId,
           isFull: item.currentMembers >= item.maxMembers,
           // status: 0招募中 1已满员 2进行中 3已结束 4已取消

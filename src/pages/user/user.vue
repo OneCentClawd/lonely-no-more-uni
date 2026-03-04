@@ -9,7 +9,7 @@
   <template v-else-if="user">
     <!-- 头像和基本信息 -->
     <view class="user-header">
-      <image class="user-avatar" :src="user.avatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onPreviewAvatar"></image>
+      <image class="user-avatar" :src="user.avatar || '/static/images/default-avatar.jpg'" mode="aspectFill" @click="onPreviewAvatar"></image>
       <view class="user-info">
         <view class="user-name-row">
           <text class="user-name">{{user.nickname || '用户' + user.id}}</text>
@@ -65,7 +65,7 @@
       <view class="section-title">参与的活动 ({{activities.length}})</view>
       <view class="activity-list">
         <view class="activity-item" v-for="(item, index) in activities" :key="item.id" @click="onActivityTap(item.id)">
-          <image class="activity-cover" :src="item.coverImage || '/images/default-cover.jpg'" mode="aspectFill"></image>
+          <image class="activity-cover" :src="item.coverImage || '/static/images/default-cover.jpg'" mode="aspectFill"></image>
           <view class="activity-info">
             <text class="activity-title">{{item.title}}</text>
             <text class="activity-time">{{item.activityTime}}</text>
@@ -93,7 +93,7 @@
       <view class="review-list" v-if="reviews.length > 0">
         <view class="review-item" v-for="(item, index) in reviews" :key="item.id">
           <view class="review-header">
-            <image class="reviewer-avatar" :src="item.raterAvatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
+            <image class="reviewer-avatar" :src="item.raterAvatar || '/static/images/default-avatar.jpg'" mode="aspectFill"/>
             <text class="reviewer-name">{{item.raterNickname}}</text>
             <text class="review-rating positive" v-if="item.rating === 2">👍</text>
             <text class="review-rating negative" v-else>👎</text>

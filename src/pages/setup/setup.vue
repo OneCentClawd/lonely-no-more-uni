@@ -139,7 +139,7 @@ const zodiacSigns = [
 export default {
   data() {
     return {
-      avatar: '/images/default-avatar.jpg',
+      avatar: '/static/images/default-avatar.jpg',
       nickname: '',
       gender: 0, // 0未知 1男 2女
       birthday: '',
@@ -165,7 +165,7 @@ export default {
       const selectedMap = {}
       interests.forEach(item => selectedMap[item] = true)
       
-      this.avatar = userInfo.avatar || '/images/default-avatar.jpg'
+      this.avatar = userInfo.avatar || '/static/images/default-avatar.jpg'
       this.nickname = userInfo.nickname || ''
       this.gender = userInfo.gender || 0
       this.selectedInterests = interests

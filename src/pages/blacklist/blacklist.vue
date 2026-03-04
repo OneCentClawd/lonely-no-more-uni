@@ -5,7 +5,7 @@
   <!-- 黑名单列表 -->
   <view class="list" v-if="list.length > 0">
     <view class="item" v-for="(item, index) in list" :key="item.id">
-      <image class="avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
+      <image class="avatar" :src="item.avatar || '/static/images/default-avatar.jpg'" mode="aspectFill"/>
       <view class="info">
         <text class="nickname">{{item.nickname || '用户' + item.blockedUserId}}</text>
         <text class="time">{{item.createdAtText}}</text>

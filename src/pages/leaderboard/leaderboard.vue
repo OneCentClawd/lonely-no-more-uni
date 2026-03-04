@@ -21,7 +21,7 @@
       </view>
       
       <!-- 用户信息 -->
-      <image class="avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
+      <image class="avatar" :src="item.avatar || '/static/images/default-avatar.jpg'" mode="aspectFill"></image>
       <view class="user-info">
         <text class="nickname">{{item.nickname}}</text>
       </view>

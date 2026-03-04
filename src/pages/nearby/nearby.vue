@@ -14,7 +14,7 @@
   <!-- 用户列表 -->
   <view class="user-list">
     <view class="user-card card" v-for="(item, index) in users" :key="item.userId" @click="onUserTap(item.userId)">
-      <image class="avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
+      <image class="avatar" :src="item.avatar || '/static/images/default-avatar.jpg'" mode="aspectFill"></image>
       <view class="user-info">
         <view class="user-header">
           <text class="nickname">{{item.nickname}}</text>

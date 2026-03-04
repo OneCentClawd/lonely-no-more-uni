@@ -212,7 +212,7 @@ export default {
           this.isLoggedIn = true
           this.user = {
               ...user,
-              avatar: user.avatar || '/images/default-avatar.jpg',
+              avatar: user.avatar || '/static/images/default-avatar.jpg',
               nickname: user.nickname || '用户' + user.id,
               interests: user.interests ? JSON.parse(user.interests) : []
             }

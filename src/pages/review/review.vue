@@ -11,7 +11,7 @@
   <view class="member-list" v-if="members.length > 0">
     <view class="member-card" v-for="(item, index) in members" :key="item.userId">
       <view class="member-info">
-        <image class="member-avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
+        <image class="member-avatar" :src="item.avatar || '/static/images/default-avatar.jpg'" mode="aspectFill"/>
         <view class="member-detail">
           <text class="member-name">{{item.nickname || '用户' + item.userId}}</text>
           <text class="member-role">{{item.role === 1 ? '发起人' : '参与者'}}</text>

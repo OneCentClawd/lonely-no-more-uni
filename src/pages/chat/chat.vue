@@ -20,7 +20,7 @@
       </view>
       <scroll-view class="members-scroll" scroll-y>
         <view class="member-item" v-for="(item, index) in members" :key="item.userId" @click="onMemberTap(item.userId)">
-          <image class="member-avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
+          <image class="member-avatar" :src="item.avatar || '/static/images/default-avatar.jpg'" mode="aspectFill"></image>
           <text class="member-name">{{item.nickname || '用户' + item.userId}}</text>
           <text class="creator-badge" v-if="item.role === 1">发起人</text>
         </view>
@@ -68,7 +68,7 @@
             id="msg-{{item.id}}">
         <!-- 他人消息：头像在左 -->
         <template v-if="!item.isMine">
-          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap(item.senderId)"></image>
+          <image class="avatar" :src="item.senderAvatar || '/static/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap(item.senderId)"></image>
           <view class="message-content">
             <view class="sender-name">{{item.senderName}}</view>
             <!-- 图片消息 -->
@@ -80,7 +80,7 @@
         </template>
         <!-- 我的消息：头像在右 -->
         <template v-else>
-          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap(item.senderId)"></image>
+          <image class="avatar" :src="item.senderAvatar || '/static/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap(item.senderId)"></image>
           <view class="message-content">
             <!-- 图片消息 -->
             <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage(item.imageUrl)"></image>
@@ -237,7 +237,7 @@ export default {
         id: msg.id,
         senderId: senderId,
         senderName: msg.senderNickname || '用户' + msg.senderId,
-        senderAvatar: msg.senderAvatar || '/images/default-avatar.jpg',
+        senderAvatar: msg.senderAvatar || '/static/images/default-avatar.jpg',
         content: msg.content,
         type: msg.type || 0,
         imageUrl: msg.imageUrl,
@@ -326,7 +326,7 @@ export default {
           id: msg.id,
           senderId: senderId,
           senderName: msg.senderNickname || '用户' + msg.senderId,
-          senderAvatar: msg.senderAvatar || '/images/default-avatar.jpg',
+          senderAvatar: msg.senderAvatar || '/static/images/default-avatar.jpg',
           content: msg.content,
           type: msg.type || 0,
           imageUrl: msg.imageUrl,
