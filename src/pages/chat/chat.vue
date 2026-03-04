@@ -295,7 +295,8 @@ export default {
     uni.connectSocket({ url: wsUrl })
 
     uni.onSocketOpen(() => {
-      this.socketOpen = true, connecting: false
+      this.socketOpen = true
+      this.connecting = false
       // 加入房间
       uni.sendSocketMessage({
         data: JSON.stringify({
@@ -361,11 +362,13 @@ export default {
     })
 
     uni.onSocketClose(() => {
-      this.socketOpen = false, connecting: false
+      this.socketOpen = false
+      this.connecting = false
     })
 
     uni.onSocketError(() => {
-      this.socketOpen = false, connecting: false
+      this.socketOpen = false
+      this.connecting = false
       uni.showToast({ title: '连接失败', icon: 'none' })
     })
   },

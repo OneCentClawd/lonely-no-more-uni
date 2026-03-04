@@ -161,7 +161,8 @@ export default {
   onLoad(options) {
     if (options.id) {
       const isSelf = options.id == app.globalData.userId
-      this.userId = options.id, isSelf
+      this.userId = options.id
+      this.isSelf = isSelf
       this.loadUser(options.id)
       this.loadActivities(options.id)
       this.loadReviews(options.id)
@@ -205,7 +206,7 @@ export default {
           }
           
           this.user = user
-        this.loading = false
+          this.loading = false
           uni.setNavigationBarTitle({
             title: user.nickname || '用户详情'
           })

@@ -103,7 +103,8 @@ export default {
   },
 
   onRadiusChange(e) {
-    this.radiusIndex = e.detail.value, loading: true
+    this.radiusIndex = e.detail.value
+    this.loading = true
     this.loadNearbyUsers()
   },
 

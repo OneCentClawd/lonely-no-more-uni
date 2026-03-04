@@ -69,7 +69,9 @@ export default {
   onTabChange(e) {
     const type = e.currentTarget.dataset.type
     if (type !== this.activeTab) {
-      this.activeTab = type, list: [], loading: true
+      this.activeTab = type
+      this.list = []
+      this.loading = true
       this.loadLeaderboard()
     }
   },

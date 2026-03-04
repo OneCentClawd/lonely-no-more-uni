@@ -172,12 +172,12 @@ export default {
       this.avatar = userInfo.avatar || '/images/default-avatar.jpg'
         this.nickname = userInfo.nickname || ''
         this.gender = userInfo.gender || 0
-        this.selectedInterests = interests,
-        selectedMap,
-        birthday: userInfo.birthday || '',
-        zodiac: userInfo.zodiac || '',
-        bio: userInfo.bio || '',
-        photos: userInfo.photos ? JSON.parse(userInfo.photos) : []
+        this.selectedInterests = interests
+        this.selectedMap = selectedMap
+        this.birthday = userInfo.birthday || ''
+        this.zodiac = userInfo.zodiac || ''
+        this.bio = userInfo.bio || ''
+        this.photos = userInfo.photos ? JSON.parse(userInfo.photos) : []
     }
   },
 

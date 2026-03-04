@@ -133,10 +133,10 @@ export default {
           this.realNameStatus = data.realNameStatus || 0
         this.studentStatus = data.studentStatus || 0
         this.realNameStatusText = this.getStatusText(data.realNameStatus || 0)
-        this.studentStatusText = this.getStatusText(data.studentStatus || 0),
-            realNameLast4: data.realNameLast4 || '',
-            verifiedSchool: data.school || '',
-            rejectReason: data.rejectReason || ''
+        this.studentStatusText = this.getStatusText(data.studentStatus || 0)
+        this.realNameLast4 = data.realNameLast4 || ''
+        this.verifiedSchool = data.school || ''
+        this.rejectReason = data.rejectReason || ''
         }
       }
     })

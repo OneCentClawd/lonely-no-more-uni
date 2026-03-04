@@ -332,7 +332,8 @@ export default {
           resolve()
         },
         fail: () => {
-          this.activities = [], loading: false
+          this.activities = []
+          this.loading = false
           uni.showToast({ title: '加载失败', icon: 'none' })
           resolve()
         }
@@ -424,7 +425,8 @@ export default {
 
   onSuggestionTap(e) {
     const keyword = e.currentTarget.dataset.keyword
-    this.searchKeyword = keyword, showSearchPanel: false
+    this.searchKeyword = keyword
+      this.showSearchPanel = false
     this.onSearch()
   },
 
@@ -451,7 +453,9 @@ export default {
       return
     }
     
-    this.loading = true, isSearching: true, showSearchPanel: false
+    this.loading = true
+      this.isSearching = true
+      this.showSearchPanel = false
     
     const headers = {}
     if (app.globalData.userId) {
@@ -484,14 +488,16 @@ export default {
         this.loading = false
       },
       fail: () => {
-        this.activities = [], loading: false
+        this.activities = []
+        this.loading = false
         uni.showToast({ title: '搜索失败', icon: 'none' })
       }
     })
   },
 
   onClearSearch() {
-    this.searchKeyword = '', isSearching: false
+    this.searchKeyword = ''
+    this.isSearching = false
     this.loadActivities()
   },
 

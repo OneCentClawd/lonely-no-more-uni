@@ -265,12 +265,12 @@ export default {
           // status: 0招募中 1已满员 2进行中 3已结束 4已取消
           const isExpired = activity.status >= 3
 
-          this.activity = activityData,
-            isCreator,
-            isJoined,
-            isFull,
-            isExpired,
-            loading: false
+          this.activity = activityData
+          this.isCreator = isCreator
+          this.isJoined = isJoined
+          this.isFull = isFull
+          this.isExpired = isExpired
+          this.loading = false
           resolve()
         } else {
           uni.showToast({ title: '活动不存在', icon: 'none' })
@@ -613,7 +613,8 @@ export default {
   },
 
   onClosePoster() {
-    this.showPoster = false, posterImage: ''
+    this.showPoster = false
+    this.posterImage = ''
   },
 
   onSavePoster() {

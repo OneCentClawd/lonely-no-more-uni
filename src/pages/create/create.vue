@@ -237,13 +237,13 @@ export default {
           this.selectedCategory = categoryIndex >= 0 ? categoryIndex : null
         this.title = t.title || ''
         this.description = t.description || ''
-        this.coverImage = t.coverImage || '',
-            address: t.address || '',
-            latitude: t.latitude,
-            longitude: t.longitude,
-            maxMembers: t.maxMembers || 4,
-            feeType: t.feeType || 'free',
-            feeAmount: t.feeAmount ? String(t.feeAmount) : ''
+        this.coverImage = t.coverImage || ''
+        this.address = t.address || ''
+        this.latitude = t.latitude
+        this.longitude = t.longitude
+        this.maxMembers = t.maxMembers || 4
+        this.feeType = t.feeType || 'free'
+        this.feeAmount = t.feeAmount ? String(t.feeAmount) : ''
           
           uni.showToast({ title: '已应用模板', icon: 'success' })
         }
@@ -283,13 +283,13 @@ export default {
           this.selectedCategory = categoryIndex >= 0 ? categoryIndex : null
         this.title = t.title || ''
         this.description = t.description || ''
-        this.coverImage = t.coverImage || '',
-            address: t.address || '',
-            latitude: t.latitude,
-            longitude: t.longitude,
-            maxMembers: t.maxMembers || 4,
-            feeType: t.feeType || 'free',
-            feeAmount: t.feeAmount ? String(t.feeAmount) : ''
+        this.coverImage = t.coverImage || ''
+        this.address = t.address || ''
+        this.latitude = t.latitude
+        this.longitude = t.longitude
+        this.maxMembers = t.maxMembers || 4
+        this.feeType = t.feeType || 'free'
+        this.feeAmount = t.feeAmount ? String(t.feeAmount) : ''
           
           uni.showToast({ title: '已应用模板', icon: 'success' })
         }
@@ -400,8 +400,8 @@ export default {
           success: (res) => {
             if (res.confirm && res.content) {
               this.address = res.content
-        this.latitude = 39.9,  // 默认北京坐标
-                longitude: 116.4
+              this.latitude = 39.9  // 默认北京坐标
+              this.longitude = 116.4
             }
           }
         })
