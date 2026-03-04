@@ -12,12 +12,24 @@
     <view class="nearby-btn" @click="onNearbyPeople">
       <text class="nearby-text">附近的人</text>
     </view>
-    <picker class="distance-picker" mode="selector" :range="distanceLabels" :value="distanceIndex" @change="onDistanceChange">
-      <view class="distance-select">
+    <!-- 自定义下拉菜单替代 picker -->
+    <view class="distance-dropdown">
+      <view class="distance-select" @click="showDistanceMenu = !showDistanceMenu">
         <text class="distance-text">{{distanceLabels[distanceIndex]}}</text>
         <text class="distance-arrow">▼</text>
       </view>
-    </picker>
+      <view class="distance-menu" v-if="showDistanceMenu">
+        <view 
+          class="distance-option" 
+          v-for="(label, index) in distanceLabels" 
+          :key="index"
+          :class="{ active: index === distanceIndex }"
+          @click="onSelectDistance(index)"
+        >
+          {{label}}
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 搜索框 -->
@@ -210,6 +222,7 @@ export default {
       distanceOptions,
       distanceLabels,
       distanceIndex: 1, // 默认10km
+      showDistanceMenu: false,
       activities: [],
       loading: true,
       latitude: null,
@@ -534,6 +547,12 @@ export default {
     })
       },
 
+    onSelectDistance(index) {
+    this.distanceIndex = index
+    this.showDistanceMenu = false
+    this.loadActivities()
+      },
+
     onDistanceChange(e) {
     this.distanceIndex = e.detail.value
     this.loadActivities()
@@ -606,7 +625,8 @@ export default {
   margin-left: 8rpx;
 }
 
-.distance-picker {
+.distance-dropdown {
+  position: relative;
   margin-left: 20rpx;
 }
 
@@ -616,6 +636,32 @@ export default {
   background-color: #f5f5f5;
   padding: 12rpx 20rpx;
   border-radius: 24rpx;
+  cursor: pointer;
+}
+
+.distance-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.15);
+  z-index: 100;
+  min-width: 160rpx;
+  margin-top: 8rpx;
+}
+
+.distance-option {
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #333;
+  text-align: center;
+}
+
+.distance-option:active,
+.distance-option.active {
+  background-color: #FFF0F0;
+  color: #FF6B6B;
 }
 
 .distance-text {
