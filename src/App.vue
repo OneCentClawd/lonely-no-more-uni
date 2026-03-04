@@ -215,4 +215,12 @@ page {
 .mb-20 {
   margin-bottom: 20rpx;
 }
+
+/* H5 picker 下拉选项样式修复 */
+uni-picker-view-column {
+  color: #333 !important;
+}
+.uni-picker-container .uni-picker-content .uni-picker-item {
+  color: #333 !important;
+}
 </style>
