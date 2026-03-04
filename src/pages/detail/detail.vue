@@ -50,7 +50,7 @@
         <text class="info-icon">💰</text>
         <text class="info-label">费用</text>
       </view>
-      <text class="info-value">{{activity.feeType === 'free' ? '免费' : (activity.feeType === 'aa' ? 'AA制' : '¥' + activity.feeAmount)}}</text>
+      <text class="info-value">{{activity.feeType === 'free' ? '免费' : (activity.feeType === 'aa' ? 'AA制' : (activity.feeAmount ? '¥' + activity.feeAmount : '待定'))}}</text>
     </view>
   </view>
 
