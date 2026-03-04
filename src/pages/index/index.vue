@@ -294,23 +294,29 @@ export default {
     })
     // #endif
     // #ifndef MP-WEIXIN
-    // H5: 用浏览器原生定位
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude
-          const lng = pos.coords.longitude
-          app.updateLocation(lat, lng, '当前位置')
-          this.latitude = lat
-          this.longitude = lng
-          this.locationName = '当前位置'
-          this.loadActivities()
-        },
-        () => {
-          this.useDefaultLocation()
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      )
+    // H5: 用高德 IP 定位（不需要用户授权）
+    if (typeof AMap !== 'undefined') {
+      AMap.plugin('AMap.CitySearch', () => {
+        const citySearch = new AMap.CitySearch()
+        citySearch.getLocalCity((status, result) => {
+          if (status === 'complete' && result.info === 'OK') {
+            // 获取城市中心点
+            const bounds = result.bounds
+            if (bounds) {
+              const center = bounds.getCenter()
+              app.updateLocation(center.lat, center.lng, result.city)
+              this.latitude = center.lat
+              this.longitude = center.lng
+              this.locationName = result.city
+              this.loadActivities()
+            } else {
+              this.useDefaultLocation()
+            }
+          } else {
+            this.useDefaultLocation()
+          }
+        })
+      })
     } else {
       this.useDefaultLocation()
     }
