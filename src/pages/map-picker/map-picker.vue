@@ -12,7 +12,10 @@
     </view>
 
     <!-- 地图容器 -->
-    <view id="map-container" class="map-container"></view>
+    <view id="map-container" class="map-container">
+      <!-- 定位按钮 -->
+      <view class="locate-btn" @click="onLocate">📍</view>
+    </view>
 
     <!-- 搜索结果列表 -->
     <view class="result-list" v-if="searchResults.length > 0">
@@ -151,6 +154,37 @@ export default {
       })
     },
 
+    onLocate() {
+      uni.showLoading({ title: '定位中...' })
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            uni.hideLoading()
+            const lng = pos.coords.longitude
+            const lat = pos.coords.latitude
+            this.map.setCenter([lng, lat])
+            this.map.setZoom(15)
+            this.setMarker(lng, lat)
+            this.reverseGeocode(lng, lat)
+            uni.showToast({ title: '定位成功', icon: 'success' })
+          },
+          (err) => {
+            uni.hideLoading()
+            console.log('定位失败:', err)
+            let msg = '定位失败'
+            if (err.code === 1) msg = '请允许位置权限'
+            else if (err.code === 2) msg = '无法获取位置'
+            else if (err.code === 3) msg = '定位超时'
+            uni.showToast({ title: msg, icon: 'none' })
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        )
+      } else {
+        uni.hideLoading()
+        uni.showToast({ title: '浏览器不支持定位', icon: 'none' })
+      }
+    },
+
     onSelectPoi(poi) {
       this.searchResults = []
       this.keyword = poi.name
@@ -232,6 +266,28 @@ export default {
   flex: 1;
   width: 100%;
   min-height: 500rpx;
+  position: relative;
+}
+
+.locate-btn {
+  position: absolute;
+  right: 20rpx;
+  bottom: 40rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.15);
+  z-index: 10;
+  cursor: pointer;
+}
+
+.locate-btn:active {
+  background: #f5f5f5;
 }
 
 .result-list {
