@@ -15,7 +15,8 @@
     { "path": "pages/leaderboard/leaderboard", "style": { "navigationBarTitleText": "排行榜" } },
     { "path": "pages/nearby/nearby", "style": { "navigationBarTitleText": "附近的人" } },
     { "path": "pages/verify/verify", "style": { "navigationBarTitleText": "身份认证" } },
-    { "path": "pages/login/login", "style": { "navigationBarTitleText": "登录" } }
+    { "path": "pages/login/login", "style": { "navigationBarTitleText": "登录" } },
+    { "path": "pages/map-picker/map-picker", "style": { "navigationBarTitleText": "选择地点" } }
   ],
   "globalStyle": {
     "navigationBarBackgroundColor": "#FF6B6B",

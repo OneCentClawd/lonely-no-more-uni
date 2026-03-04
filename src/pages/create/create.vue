@@ -394,7 +394,10 @@ export default {
     })
     // #endif
     // #ifndef MP-WEIXIN
-    this.showAddressInput()
+    // H5: 跳转到高德地图选点页面
+    uni.navigateTo({
+      url: '/pages/map-picker/map-picker'
+    })
     // #endif
       },
 
