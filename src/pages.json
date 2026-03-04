@@ -1,0 +1,37 @@
+{
+  "pages": [
+    { "path": "pages/index/index", "style": { "navigationBarTitleText": "发现" } },
+    { "path": "pages/create/create", "style": { "navigationBarTitleText": "发起活动" } },
+    { "path": "pages/detail/detail", "style": { "navigationBarTitleText": "活动详情" } },
+    { "path": "pages/chat/chat", "style": { "navigationBarTitleText": "群聊" } },
+    { "path": "pages/user/user", "style": { "navigationBarTitleText": "用户主页" } },
+    { "path": "pages/profile/profile", "style": { "navigationBarTitleText": "我的" } },
+    { "path": "pages/setup/setup", "style": { "navigationBarTitleText": "编辑资料" } },
+    { "path": "pages/notification/notification", "style": { "navigationBarTitleText": "通知" } },
+    { "path": "pages/settings/settings", "style": { "navigationBarTitleText": "设置" } },
+    { "path": "pages/review/review", "style": { "navigationBarTitleText": "评价" } },
+    { "path": "pages/blacklist/blacklist", "style": { "navigationBarTitleText": "黑名单" } },
+    { "path": "pages/templates/templates", "style": { "navigationBarTitleText": "活动模板" } },
+    { "path": "pages/leaderboard/leaderboard", "style": { "navigationBarTitleText": "排行榜" } },
+    { "path": "pages/nearby/nearby", "style": { "navigationBarTitleText": "附近的人" } },
+    { "path": "pages/verify/verify", "style": { "navigationBarTitleText": "身份认证" } },
+    { "path": "pages/login/login", "style": { "navigationBarTitleText": "登录" } }
+  ],
+  "globalStyle": {
+    "navigationBarBackgroundColor": "#FF6B6B",
+    "navigationBarTitleText": "孤独患者",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "发现", "iconPath": "static/tab-discover.png", "selectedIconPath": "static/tab-discover-active.png" },
+      { "pagePath": "pages/create/create", "text": "发起", "iconPath": "static/tab-create.png", "selectedIconPath": "static/tab-create-active.png" },
+      { "pagePath": "pages/profile/profile", "text": "我的", "iconPath": "static/tab-profile.png", "selectedIconPath": "static/tab-profile-active.png" }
+    ]
+  }
+}
