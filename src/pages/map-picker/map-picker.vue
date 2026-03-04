@@ -201,28 +201,15 @@ export default {
         uni.showToast({ title: '请选择地点', icon: 'none' })
         return
       }
-      // 返回上一页并传递数据
-      const pages = getCurrentPages()
-      const prevPage = pages[pages.length - 2]
-      if (prevPage && prevPage.$vm) {
-        const vm = prevPage.$vm
-        const name = this.selectedName || this.selectedAddress
-        // 判断来源页面
-        if (vm.locationName !== undefined) {
-          // 来自 index 页面
-          vm.locationName = name
-          vm.latitude = this.selectedLat
-          vm.longitude = this.selectedLng
-          if (vm.loadActivities) {
-            vm.loadActivities()
-          }
-        } else {
-          // 来自 create 页面
-          vm.address = name
-          vm.latitude = this.selectedLat
-          vm.longitude = this.selectedLng
-        }
-      }
+      const name = this.selectedName || this.selectedAddress
+      
+      // 用事件通信传递数据（兼容 tabBar 页面）
+      uni.$emit('locationSelected', {
+        name: name,
+        latitude: this.selectedLat,
+        longitude: this.selectedLng
+      })
+      
       uni.navigateBack()
     }
   }

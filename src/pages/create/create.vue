@@ -199,6 +199,13 @@ export default {
   },
 
   onLoad(options) {
+    // 监听位置选择事件
+    uni.$on('locationSelected', (data) => {
+      this.address = data.name
+      this.latitude = data.latitude
+      this.longitude = data.longitude
+    })
+    
     this.initDateTime()
     this.loadTemplates()
     
@@ -206,6 +213,11 @@ export default {
     if (options.templateId) {
       this.loadAndApplyTemplate(options.templateId)
     }
+    },
+
+  onUnload() {
+    // 移除事件监听
+    uni.$off('locationSelected')
     },
 
   onShow() {

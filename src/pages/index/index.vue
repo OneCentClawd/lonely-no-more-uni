@@ -238,6 +238,15 @@ export default {
   },
 
   onLoad() {
+    // 监听位置选择事件
+    uni.$on('locationSelected', (data) => {
+      this.locationName = data.name
+      this.latitude = data.latitude
+      this.longitude = data.longitude
+      app.updateLocation(data.latitude, data.longitude, data.name)
+      this.loadActivities()
+    })
+    
     // 优先使用全局位置
     if (app.globalData.latitude && app.globalData.longitude) {
       this.latitude = app.globalData.latitude
@@ -247,6 +256,11 @@ export default {
     } else {
       this.getLocation()
     }
+    },
+
+  onUnload() {
+    // 移除事件监听
+    uni.$off('locationSelected')
     },
 
   onShow() {
