@@ -1,16 +1,16 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/blacklist/blacklist.wxml-->
 <view class="container">
   <!-- 黑名单列表 -->
   <view class="list" v-if="list.length > 0">
-    <view class="item" v-for="item in list" :key="id">
-      <image class="avatar" src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
+    <view class="item" v-for="(item, index) in list" :key="item.id">
+      <image class="avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
       <view class="info">
         <text class="nickname">{{item.nickname || '用户' + item.blockedUserId}}</text>
         <text class="time">{{item.createdAtText}}</text>
       </view>
-      <button class="btn-unblock" size="mini" @click="onUnblock" data-id="{{item.blockedUserId">解除</button>
+      <button class="btn-unblock" size="mini" @click="onUnblock" :data-id="item.blockedUserId">解除</button>
     </view>
   </view>
 
@@ -25,6 +25,7 @@
     <text>加载中...</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -101,6 +102,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -181,4 +183,5 @@ Page({
   padding: 100rpx;
   color: #999;
 }
+
 </style>

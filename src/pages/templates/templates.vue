@@ -1,9 +1,9 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <view class="container">
   <view class="template-list" v-if="templates.length > 0">
-    <view class="template-card card" v-for="item in templates" :key="id">
-      <view class="template-info" @click="onUseTemplate" data-id="{{item.id">
+    <view class="template-card card" v-for="(item, index) in templates" :key="item.id">
+      <view class="template-info" @click="onUseTemplate" :data-id="item.id">
         <view class="template-header">
           <text class="template-name">{{item.name}}</text>
           <text class="use-count">使用{{item.useCount}}次</text>
@@ -16,8 +16,8 @@
         <view class="template-title" v-if="item.title">{{item.title}}</view>
       </view>
       <view class="template-actions">
-        <view class="action-btn use" @click="onUseTemplate" data-id="{{item.id">使用</view>
-        <view class="action-btn delete" @click="onDeleteTemplate" data-id="{{item.id">删除</view>
+        <view class="action-btn use" @click="onUseTemplate" :data-id="item.id">使用</view>
+        <view class="action-btn delete" @click="onDeleteTemplate" :data-id="item.id">删除</view>
       </view>
     </view>
   </view>
@@ -32,6 +32,7 @@
     <text>加载中...</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -107,6 +108,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -227,4 +229,5 @@ Page({
   padding: 48rpx;
   color: #999;
 }
+
 </style>

@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/settings/settings.wxml-->
 <view class="container">
@@ -12,14 +12,14 @@
         <text class="item-icon">📍</text>
         <text class="item-label">公开我的位置</text>
       </view>
-      <switch class="item-switch" checked="{{settings.showLocation" @change="onShowLocationChange" color="#FF6B6B"/>
+      <switch class="item-switch" :checked="settings.showLocation" @change="onShowLocationChange" color="#FF6B6B"/>
     </view>
     <view class="setting-item">
       <view class="item-left">
         <text class="item-icon">💬</text>
         <text class="item-label">允许陌生人私信</text>
       </view>
-      <switch class="item-switch" checked="{{settings.allowStrangerMessage" @change="onAllowStrangerMessageChange" color="#FF6B6B"/>
+      <switch class="item-switch" :checked="settings.allowStrangerMessage" @change="onAllowStrangerMessageChange" color="#FF6B6B"/>
     </view>
     <view class="setting-item clickable" @click="onBlacklist">
       <view class="item-left">
@@ -42,14 +42,14 @@
         <text class="item-icon">🔔</text>
         <text class="item-label">活动提醒</text>
       </view>
-      <switch class="item-switch" checked="{{settings.activityNotify" @change="onActivityNotifyChange" color="#FF6B6B"/>
+      <switch class="item-switch" :checked="settings.activityNotify" @change="onActivityNotifyChange" color="#FF6B6B"/>
     </view>
     <view class="setting-item">
       <view class="item-left">
         <text class="item-icon">💌</text>
         <text class="item-label">聊天消息提醒</text>
       </view>
-      <switch class="item-switch" checked="{{settings.chatNotify" @change="onChatNotifyChange" color="#FF6B6B"/>
+      <switch class="item-switch" :checked="settings.chatNotify" @change="onChatNotifyChange" color="#FF6B6B"/>
     </view>
   </view>
 
@@ -85,6 +85,7 @@
     <button class="logout-btn" @click="onLogout">退出登录</button>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -226,6 +227,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -322,4 +324,5 @@ Page({
 .logout-btn::after {
   border: none;
 }
+
 </style>

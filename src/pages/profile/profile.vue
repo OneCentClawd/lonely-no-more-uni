@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/profile/profile.wxml-->
 <view class="container">
@@ -16,7 +16,7 @@
   <!-- 用户信息卡片 -->
   <view class="profile-card card" v-if="isLoggedIn && user">
     <view class="profile-header">
-      <image class="profile-avatar" src="user.avatar" mode="aspectFill"></image>
+      <image class="profile-avatar" :src="user.avatar" mode="aspectFill"></image>
       <view class="profile-info">
         <view class="profile-name">{{user.nickname}}</view>
         <view class="profile-credit">
@@ -28,7 +28,7 @@
     </view>
     <view class="profile-bio" v-if="user.bio">{{user.bio}}</view>
     <view class="profile-interests" v-if="user.interests.length > 0">
-      <text class="interest-tag tag" v-for="item in user.interests" :key="*this">{{item}}</text>
+      <text class="interest-tag tag" v-for="(item, index) in user.interests" :key="item">{{item}}</text>
     </view>
   </view>
 
@@ -40,13 +40,13 @@
     
     <!-- Tab 切换 -->
     <view class="tabs">
-      <view class="tab {{activeTab === 0 ? 'active' : ''" data-index="0" @click="onTabChange">
+      <view class="tab {{activeTab === 0 ? 'active' : ''}}" data-index="0" @click="onTabChange">
         全部
       </view>
-      <view class="tab {{activeTab === 1 ? 'active' : ''" data-index="1" @click="onTabChange">
+      <view class="tab {{activeTab === 1 ? 'active' : ''}}" data-index="1" @click="onTabChange">
         我发起的
       </view>
-      <view class="tab {{activeTab === 2 ? 'active' : ''" data-index="2" @click="onTabChange">
+      <view class="tab {{activeTab === 2 ? 'active' : ''}}" data-index="2" @click="onTabChange">
         我参与的
       </view>
     </view>
@@ -55,9 +55,8 @@
     <view class="activity-list">
       <view 
         class="activity-item card" 
-        v-for="item in myActivities" 
-        :key="id"
-        data-id="{{item.id"
+        v-for="(item, index) in myActivities" :key="item.id"
+        :data-id="item.id"
         @click="onActivityTap"
       >
         <view class="activity-left">
@@ -71,7 +70,7 @@
           <view class="unread-dot" v-if="item.unreadCount > 0">
             <text>{{item.unreadCount > 99 ? '99+' : item.unreadCount}}</text>
           </view>
-          <text class="status-badge {{item.status === 0 ? 'recruiting' : ''">
+          <text class="status-badge {{item.status === 0 ? 'recruiting' : ''}}">
             {{item.status === 0 ? '招募中' : (item.status === 1 ? '已满员' : (item.status === 3 ? '已结束' : '已取消'))}}
           </text>
         </view>
@@ -115,6 +114,7 @@
     <text class="arrow">›</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -466,6 +466,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -734,4 +735,5 @@ Page({
   border-radius: 12rpx;
   margin-right: 8rpx;
 }
+
 </style>

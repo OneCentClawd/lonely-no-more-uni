@@ -1,9 +1,9 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <view class="container">
   <!-- 筛选栏 -->
   <view class="filter-bar">
-    <picker class="radius-picker" mode="selector" range="{{radiusOptions" range-key="label" value="{{radiusIndex" @change="onRadiusChange">
+    <picker class="radius-picker" mode="selector" range="{{radiusOptions}}" range-key="label" :value="radiusIndex" @change="onRadiusChange">
       <view class="radius-select">
         <text class="radius-text">{{radiusOptions[radiusIndex].label}}</text>
         <text class="radius-arrow">▼</text>
@@ -13,8 +13,8 @@
 
   <!-- 用户列表 -->
   <view class="user-list">
-    <view class="user-card card" v-for="item in users" :key="userId" @click="onUserTap" data-userid="{{item.userId">
-      <image class="avatar" src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
+    <view class="user-card card" v-for="(item, index) in users" :key="item.userId" @click="onUserTap" :data-userid="item.userId">
+      <image class="avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
       <view class="user-info">
         <view class="user-header">
           <text class="nickname">{{item.nickname}}</text>
@@ -25,10 +25,10 @@
           <text class="distance-text">{{item.distance}}km</text>
         </view>
         <view class="common-interests" v-if="item.commonInterests.length > 0">
-          <text class="interest-tag" v-for="item in item.commonInterests" v-for-item="interest" :key="*this">{{interest}}</text>
+          <text class="interest-tag" v-for="(interest, index) in item.commonInterests" :key="interest">{{interest}}</text>
         </view>
         <view class="interests" v-else-if="item.interests.length > 0">
-          <text class="interest-tag light" v-for="item in item.interests" v-for-item="interest" :key="*this" v-if="index < 3">{{interest}}</text>
+          <text class="interest-tag light" v-for="(interest, index) in item.interests" :key="interest" v-if="index < 3">{{interest}}</text>
         </view>
       </view>
       <text class="arrow">›</text>
@@ -47,6 +47,7 @@
     <text class="empty-hint">试试扩大搜索范围</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -137,6 +138,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -285,4 +287,5 @@ Page({
   font-size: 26rpx;
   color: #999;
 }
+
 </style>

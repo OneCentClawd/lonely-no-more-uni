@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/review/review.wxml-->
 <view class="container">
@@ -9,20 +9,20 @@
 
   <!-- 可评价成员列表 -->
   <view class="member-list" v-if="members.length > 0">
-    <view class="member-card" v-for="item in members" :key="userId">
+    <view class="member-card" v-for="(item, index) in members" :key="item.userId">
       <view class="member-info">
-        <image class="member-avatar" src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
+        <image class="member-avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
         <view class="member-detail">
           <text class="member-name">{{item.nickname || '用户' + item.userId}}</text>
           <text class="member-role">{{item.role === 1 ? '发起人' : '参与者'}}</text>
         </view>
       </view>
       <view class="rating-buttons">
-        <view class="rating-btn positive {{item.selected === 2 ? 'selected' : ''" data-index="{{index" data-rating="2" @click="onRatingTap">
+        <view class="rating-btn positive {{item.selected === 2 ? 'selected' : ''}}" :data-index="index" data-rating="2" @click="onRatingTap">
           <text class="rating-icon">👍</text>
           <text class="rating-text">好评</text>
         </view>
-        <view class="rating-btn negative {{item.selected === 1 ? 'selected' : ''" data-index="{{index" data-rating="1" @click="onRatingTap">
+        <view class="rating-btn negative {{item.selected === 1 ? 'selected' : ''}}" :data-index="index" data-rating="1" @click="onRatingTap">
           <text class="rating-icon">👎</text>
           <text class="rating-text">差评</text>
         </view>
@@ -33,7 +33,7 @@
           class="comment-input" 
           placeholder="写一句评价（可选）" 
           maxlength="100"
-          data-index="{{index"
+          :data-index="index"
           @input="onCommentInput"
         />
       </view>
@@ -48,10 +48,11 @@
 
   <!-- 提交按钮 -->
   <view class="submit-section" v-if="members.length > 0">
-    <button class="btn-primary submit-btn" @click="onSubmit" disabled="{{submitting">提交评价</button>
+    <button class="btn-primary submit-btn" @click="onSubmit" :disabled="submitting">提交评价</button>
     <text class="skip-btn" @click="onSkip">跳过</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -169,6 +170,7 @@ Page({
     uni.navigateBack()
   }
 })
+
 </script>
 
 <style scoped>
@@ -332,4 +334,5 @@ Page({
   font-size: 28rpx;
   color: #999;
 }
+
 </style>

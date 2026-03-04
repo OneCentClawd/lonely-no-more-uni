@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/index/index.wxml-->
 <view class="container">
@@ -12,7 +12,7 @@
     <view class="nearby-btn" @click="onNearbyPeople">
       <text class="nearby-text">附近的人</text>
     </view>
-    <picker class="distance-picker" mode="selector" range="{{distanceOptions" range-key="label" value="{{distanceIndex" @change="onDistanceChange">
+    <picker class="distance-picker" mode="selector" range="{{distanceOptions}}" range-key="label" :value="distanceIndex" @change="onDistanceChange">
       <view class="distance-select">
         <text class="distance-text">{{distanceOptions[distanceIndex].label}}</text>
         <text class="distance-arrow">▼</text>
@@ -27,10 +27,10 @@
       <input 
         class="search-input" 
         placeholder="搜索活动" 
-        value="{{searchKeyword"
+        :value="searchKeyword"
         @input="onSearchInput"
-        bindconfirm="onSearch"
-        bindfocus="onSearchFocus"
+        @confirm="onSearch"
+        @focus="onSearchFocus"
         confirm-type="search"
       />
       <text class="search-clear" v-if="searchKeyword" @click="onClearSearch">×</text>
@@ -46,7 +46,7 @@
         <text class="search-section-clear" @click="onClearHistory">清空</text>
       </view>
       <view class="search-tags">
-        <view class="search-tag" v-for="item in recentSearches" :key="*this" data-keyword="{{item" @click="onSuggestionTap">{{item}}</view>
+        <view class="search-tag" v-for="(item, index) in recentSearches" :key="item" :data-keyword="item" @click="onSuggestionTap">{{item}}</view>
       </view>
     </view>
     <!-- 热门搜索 -->
@@ -55,7 +55,7 @@
         <text class="search-section-title">🔥 热门搜索</text>
       </view>
       <view class="search-tags">
-        <view class="search-tag hot" v-for="item in hotSearches" :key="*this" data-keyword="{{item" @click="onSuggestionTap">{{item}}</view>
+        <view class="search-tag hot" v-for="(item, index) in hotSearches" :key="item" :data-keyword="item" @click="onSuggestionTap">{{item}}</view>
       </view>
     </view>
   </view>
@@ -64,10 +64,9 @@
   <scroll-view class="category-scroll" scroll-x>
     <view class="category-list">
       <view 
-        class="category-item {{item.active ? 'active' : ''" 
-        v-for="item in categories" 
-        :key="name"
-        data-index="{{index"
+        class="category-item {{item.active ? 'active' : ''}}" 
+        v-for="(item, index) in categories" :key="item.name"
+        :data-index="index"
         @click="onCategoryTap"
       >
         <text class="category-icon">{{item.icon}}</text>
@@ -78,7 +77,7 @@
 
   <!-- 骨架屏加载 -->
   <view class="skeleton-list" v-if="loading">
-    <view class="skeleton-card" v-for="item in [1,2,3]" :key="*this">
+    <view class="skeleton-card" v-for="(item, index) in [1,2,3]" :key="item">
       <view class="skeleton-header">
         <view class="skeleton-category"></view>
         <view class="skeleton-distance"></view>
@@ -98,14 +97,13 @@
   <!-- 活动列表 -->
   <view class="activity-list" v-if="!loading">
     <view 
-      class="activity-card card {{item.coverImage ? 'has-cover' : ''" 
-      v-for="item in activities" 
-      :key="id"
-      data-id="{{item.id"
+      class="activity-card card {{item.coverImage ? 'has-cover' : ''}}" 
+      v-for="(item, index) in activities" :key="item.id"
+      :data-id="item.id"
       @click="onActivityTap"
     >
       <!-- 封面图 -->
-      <image class="activity-cover" v-if="item.coverImage" src="item.coverImage" mode="aspectFill"/>
+      <image class="activity-cover" v-if="item.coverImage" :src="item.coverImage" mode="aspectFill"/>
       
       <!-- 头部：类型 + 状态标签 + 距离 -->
       <view class="activity-header flex-between">
@@ -142,8 +140,8 @@
             {{item.feeType === 'free' ? '免费' : (item.feeType === 'aa' ? 'AA制' : '¥' + item.feeAmount)}}
           </text>
         </view>
-        <view class="footer-right flex" @click.stop="onCreatorTap" data-userid="{{item.creatorId">
-          <image class="avatar" src="item.creatorAvatar" mode="aspectFill"></image>
+        <view class="footer-right flex" @click.stop="onCreatorTap" :data-userid="item.creatorId">
+          <image class="avatar" :src="item.creatorAvatar" mode="aspectFill"></image>
           <text class="creator-name text-small text-gray">{{item.creatorName}}</text>
         </view>
       </view>
@@ -158,6 +156,7 @@
     <button class="btn-primary create-btn" @click="goCreate">发起活动</button>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -566,6 +565,7 @@ Page({
     }
   }
 })
+
 </script>
 
 <style scoped>
@@ -1058,4 +1058,5 @@ Page({
   font-size: 26rpx;
   color: #666;
 }
+
 </style>

@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/chat/chat.wxml-->
 <view class="chat-container">
@@ -13,14 +13,14 @@
 
   <!-- 成员列表弹窗 -->
   <view class="members-modal" v-if="showMembersModal" @click="onHideMembers">
-    <view class="members-content" @click.stop="">
+    <view class="members-content" catchtap="">
       <view class="members-header">
         <text class="members-title">群成员 ({{memberCount}})</text>
         <text class="close-btn" @click="onHideMembers">×</text>
       </view>
       <scroll-view class="members-scroll" scroll-y>
-        <view class="member-item" v-for="item in members" :key="userId" @click="onMemberTap" data-userid="{{item.userId">
-          <image class="member-avatar" src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
+        <view class="member-item" v-for="(item, index) in members" :key="item.userId" @click="onMemberTap" :data-userid="item.userId">
+          <image class="member-avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
           <text class="member-name">{{item.nickname || '用户' + item.userId}}</text>
           <text class="creator-badge" v-if="item.role === 1">发起人</text>
         </view>
@@ -40,10 +40,10 @@
   <scroll-view 
     class="message-list" 
     scroll-y 
-    scroll-into-view="{{scrollToMessage"
+    scroll-into-view="{{scrollToMessage}}"
     scroll-with-animation
-    enhanced="{{true"
-    bounces="{{false"
+    enhanced="{{true}}"
+    bounces="{{false}}"
   >
     <!-- 空状态 -->
     <view class="empty-state" v-if="messages.length === 0 && !loading">
@@ -51,28 +51,28 @@
       <text class="empty-text">开始聊天吧～</text>
     </view>
 
-    <block v-for="item in messages" :key="id">
+    <block v-for="(item, index) in messages" :key="item.id">
       <!-- 时间分隔线 -->
       <view class="time-divider" v-if="item.showTimeDivider">
         <text>{{item.timeDividerText}}</text>
       </view>
       
       <!-- 系统消息 -->
-      <view class="system-message-wrapper" v-if="item.isSystem" id="msg-{{item.id">
+      <view class="system-message-wrapper" v-if="item.isSystem" id="msg-{{item.id}}">
         <view class="system-message">{{item.content}}</view>
       </view>
       
       <!-- 普通消息 -->
-      <view class="message-item {{item.isMine ? 'mine' : ''" 
+      <view class="message-item {{item.isMine ? 'mine' : ''}}" 
             v-if="!item.isSystem"
-            id="msg-{{item.id">
+            id="msg-{{item.id}}">
         <!-- 他人消息：头像在左 -->
         <block v-if="!item.isMine">
-          <image class="avatar" src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" data-userid="{{item.senderId"></image>
+          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" :data-userid="item.senderId"></image>
           <view class="message-content">
             <view class="sender-name">{{item.senderName}}</view>
             <!-- 图片消息 -->
-            <image class="bubble-image" v-if="item.type === 2" src="item.imageUrl" mode="widthFix" @click="onPreviewImage" data-url="{{item.imageUrl"></image>
+            <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage" :data-url="item.imageUrl"></image>
             <!-- 文字消息 -->
             <view class="bubble" v-else>{{item.content}}</view>
             <view class="message-time">{{item.createdAt}}</view>
@@ -80,10 +80,10 @@
         </block>
         <!-- 我的消息：头像在右 -->
         <block v-else>
-          <image class="avatar" src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" data-userid="{{item.senderId"></image>
+          <image class="avatar" :src="item.senderAvatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onAvatarTap" :data-userid="item.senderId"></image>
           <view class="message-content">
             <!-- 图片消息 -->
-            <image class="bubble-image" v-if="item.type === 2" src="item.imageUrl" mode="widthFix" @click="onPreviewImage" data-url="{{item.imageUrl"></image>
+            <image class="bubble-image" v-if="item.type === 2" :src="item.imageUrl" mode="widthFix" @click="onPreviewImage" :data-url="item.imageUrl"></image>
             <!-- 文字消息 -->
             <view class="bubble mine" v-else>{{item.content}}</view>
             <view class="message-time">{{item.createdAt}}</view>
@@ -94,25 +94,26 @@
   </scroll-view>
 
   <!-- 输入栏 -->
-  <view class="input-bar" style="bottom: {{keyboardHeight}}px;">
+  <view class="input-bar" :style="`bottom: ${keyboardHeight}px;`">
     <view class="input-extra" @click="onChooseImage">
       <text class="extra-icon">📷</text>
     </view>
     <input 
       class="input-field" 
       placeholder="输入消息..." 
-      value="{{inputValue"
+      :value="inputValue"
       @input="onInput"
-      bindconfirm="onSend"
+      @confirm="onSend"
       confirm-type="send"
-      adjust-position="{{false"
-      bindfocus="onInputFocus"
-      bindblur="onInputBlur"
-      disabled="{{!socketOpen"
+      :adjust-position="false"
+      @focus="onInputFocus"
+      @blur="onInputBlur"
+      :disabled="!socketOpen"
     />
-    <button class="send-btn {{inputValue ? '' : 'disabled'" @click="onSend" disabled="{{!socketOpen || !inputValue">发送</button>
+    <button class="send-btn {{inputValue ? '' : 'disabled'}}" @click="onSend" :disabled="!socketOpen || !inputValue">发送</button>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -527,6 +528,7 @@ Page({
     }
   }
 })
+
 </script>
 
 <style scoped>
@@ -873,4 +875,5 @@ Page({
 .extra-icon {
   font-size: 44rpx;
 }
+
 </style>

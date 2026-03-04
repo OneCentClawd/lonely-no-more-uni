@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/setup/setup.wxml-->
 <view class="container">
@@ -9,7 +9,7 @@
 
   <!-- 头像 -->
   <view class="section avatar-section" @click="onChooseAvatar">
-    <image class="avatar" src="avatar" mode="aspectFill"></image>
+    <image class="avatar" :src="avatar" mode="aspectFill"></image>
     <text class="avatar-hint">点击更换头像</text>
   </view>
 
@@ -20,7 +20,7 @@
       class="input-field" 
       placeholder="输入你的昵称" 
       maxlength="20"
-      value="{{nickname"
+      :value="nickname"
       @input="onNicknameInput"
     />
   </view>
@@ -30,15 +30,15 @@
     <view class="section-title">性别</view>
     <radio-group class="gender-group" @change="onGenderChange">
       <label class="gender-option">
-        <radio value="1" checked="{{gender === 1" color="#FF6B6B"/>
+        <radio value="1" :checked="gender === 1" color="#FF6B6B"/>
         <text>男</text>
       </label>
       <label class="gender-option">
-        <radio value="2" checked="{{gender === 2" color="#FF6B6B"/>
+        <radio value="2" :checked="gender === 2" color="#FF6B6B"/>
         <text>女</text>
       </label>
       <label class="gender-option">
-        <radio value="0" checked="{{gender === 0" color="#FF6B6B"/>
+        <radio value="0" :checked="gender === 0" color="#FF6B6B"/>
         <text>保密</text>
       </label>
     </radio-group>
@@ -47,8 +47,8 @@
   <!-- 生日 -->
   <view class="section">
     <view class="section-title">生日</view>
-    <picker mode="date" value="{{birthday" start="1950-01-01" end="2015-12-31" @change="onBirthdayChange">
-      <view class="picker-field {{birthday ? '' : 'placeholder'">
+    <picker mode="date" :value="birthday" start="1950-01-01" end="2015-12-31" @change="onBirthdayChange">
+      <view class="picker-field {{birthday ? '' : 'placeholder'}}">
         {{birthday || '选择你的生日'}}
       </view>
     </picker>
@@ -65,7 +65,7 @@
       class="textarea-field" 
       placeholder="写一句话介绍自己吧～" 
       maxlength="100"
-      value="{{bio"
+      :value="bio"
       @input="onBioInput"
     />
   </view>
@@ -75,10 +75,9 @@
     <view class="section-title">兴趣标签 <text class="hint">(最多选5个)</text></view>
     <view class="interest-grid">
       <view 
-        class="interest-item {{selectedMap[item] ? 'selected' : ''"
-        v-for="item in interestOptions"
-        :key="*this"
-        data-interest="{{item"
+        class="interest-item {{selectedMap[item] ? 'selected' : ''}}"
+        v-for="(item, index) in interestOptions" :key="item"
+        :data-interest="item"
         @click="onInterestTap"
       >
         {{item}}
@@ -92,13 +91,12 @@
     <view class="photos-grid">
       <image 
         class="photo-item" 
-        v-for="item in photos" 
-        :key="*this" 
-        src="item" 
+        v-for="(item, index) in photos" :key="item" 
+        :src="item" 
         mode="aspectFill"
-        data-index="{{index"
+        :data-index="index"
         @click="onPreviewPhoto"
-        bindlongpress="onDeletePhoto"
+        @longpress="onDeletePhoto"
       ></image>
       <view class="photo-add" v-if="photos.length < 9" @click="onAddPhoto">
         <text class="add-icon">+</text>
@@ -113,6 +111,7 @@
     <view class="skip-btn" @click="onSkip" v-if="!isEdit">稍后完善</view>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -419,6 +418,7 @@ Page({
     uni.switchTab({ url: '/pages/index/index' })
   }
 })
+
 </script>
 
 <style scoped>
@@ -641,4 +641,5 @@ Page({
   color: #999;
   margin-top: 8rpx;
 }
+
 </style>

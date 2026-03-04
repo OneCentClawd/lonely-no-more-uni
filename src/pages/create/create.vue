@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/create/create.wxml-->
 <view class="container">
@@ -9,9 +9,8 @@
       <view class="template-list">
         <view 
           class="template-item" 
-          v-for="item in templates" 
-          :key="id" 
-          data-id="{{item.id"
+          v-for="(item, index) in templates" :key="item.id" 
+          :data-id="item.id"
           @click="onTemplateTap"
         >
           <text class="template-icon">📋</text>
@@ -26,10 +25,9 @@
     <view class="section-title">活动类型</view>
     <view class="category-grid">
       <view 
-        class="category-item {{selectedCategory === index ? 'selected' : ''"
-        v-for="item in categories"
-        :key="name"
-        data-index="{{index"
+        class="category-item {{selectedCategory === index ? 'selected' : ''}}"
+        v-for="(item, index) in categories" :key="item.name"
+        :data-index="index"
         @click="onCategoryTap"
       >
         <text class="category-icon">{{item.icon}}</text>
@@ -45,7 +43,7 @@
       class="input-field" 
       placeholder="例如：周末打羽毛球找人" 
       maxlength="30"
-      value="{{title"
+      :value="title"
       @input="onTitleInput"
     />
   </view>
@@ -57,7 +55,7 @@
       class="textarea-field" 
       placeholder="补充说明活动详情、要求等..."
       maxlength="200"
-      value="{{description"
+      :value="description"
       @input="onDescInput"
     />
   </view>
@@ -67,7 +65,7 @@
     <view class="section-title">活动封面 <text class="optional">(选填)</text></view>
     <view class="cover-upload" @click="onChooseCover">
       <block v-if="coverImage">
-        <image class="cover-preview" src="coverImage" mode="aspectFill"/>
+        <image class="cover-preview" :src="coverImage" mode="aspectFill"/>
         <view class="cover-delete" @click.stop="onDeleteCover">×</view>
       </block>
       <block v-else>
@@ -84,7 +82,7 @@
     <view class="section-title">活动地点</view>
     <view class="location-picker" @click="onChooseLocation">
       <text class="location-icon">📍</text>
-      <text class="location-text {{address ? '' : 'placeholder'">
+      <text class="location-text {{address ? '' : 'placeholder'}}">
         {{address || '点击选择地点'}}
       </text>
       <text class="arrow">›</text>
@@ -95,13 +93,13 @@
   <view class="section">
     <view class="section-title">活动时间</view>
     <view class="time-picker-row">
-      <picker mode="selector" range="{{dates" range-key="label" value="{{dateIndex" @change="onDateChange">
+      <picker mode="selector" range="{{dates}}" range-key="label" :value="dateIndex" @change="onDateChange">
         <view class="picker-item">
           <text>{{dates[dateIndex].label}}</text>
           <text class="arrow">›</text>
         </view>
       </picker>
-      <picker v-if="dates[dateIndex].value !== 'NOW'" mode="selector" range="{{times" range-key="label" value="{{timeIndex" @change="onTimeChange">
+      <picker v-if="dates[dateIndex].value !== 'NOW'" mode="selector" range="{{times}}" range-key="label" :value="timeIndex" @change="onTimeChange">
         <view class="picker-item">
           <text>{{times[timeIndex].label}}</text>
           <text class="arrow">›</text>
@@ -117,7 +115,7 @@
       class="member-slider"
       min="2" 
       max="20" 
-      value="{{maxMembers" 
+      :value="maxMembers" 
       show-value
       activeColor="#FF6B6B"
       @change="onMemberChange"
@@ -129,15 +127,15 @@
     <view class="section-title">费用</view>
     <radio-group class="fee-group" @change="onFeeTypeChange">
       <label class="fee-option">
-        <radio value="free" checked="{{feeType === 'free'" color="#FF6B6B"/>
+        <radio value="free" :checked="feeType === 'free'" color="#FF6B6B"/>
         <text>免费</text>
       </label>
       <label class="fee-option">
-        <radio value="aa" checked="{{feeType === 'aa'" color="#FF6B6B"/>
+        <radio value="aa" :checked="feeType === 'aa'" color="#FF6B6B"/>
         <text>AA制</text>
       </label>
       <label class="fee-option">
-        <radio value="fixed" checked="{{feeType === 'fixed'" color="#FF6B6B"/>
+        <radio value="fixed" :checked="feeType === 'fixed'" color="#FF6B6B"/>
         <text>固定费用</text>
       </label>
     </radio-group>
@@ -146,7 +144,7 @@
       <input 
         type="digit" 
         placeholder="输入金额" 
-        value="{{feeAmount"
+        :value="feeAmount"
         @input="onFeeAmountInput"
       />
     </view>
@@ -155,6 +153,7 @@
   <!-- 提交按钮 -->
   <button class="btn-primary submit-btn" @click="onSubmit">发起活动</button>
 </view>
+
 </template>
 
 <script>
@@ -534,6 +533,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -811,4 +811,5 @@ Page({
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 </style>

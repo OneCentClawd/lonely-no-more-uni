@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/notification/notification.wxml-->
 <view class="container">
@@ -10,11 +10,10 @@
   <!-- 通知列表 -->
   <view class="notification-list">
     <view 
-      class="notification-item {{item.isRead ? 'read' : 'unread'"
-      v-for="item in notifications"
-      :key="id"
-      data-id="{{item.id"
-      data-activity-id="{{item.activityId"
+      class="notification-item {{item.isRead ? 'read' : 'unread'}}"
+      v-for="(item, index) in notifications" :key="item.id"
+      :data-id="item.id"
+      data-activity-id="{{item.activityId}}"
       @click="onNotificationTap"
     >
       <view class="notification-icon">
@@ -40,6 +39,7 @@
     <text class="empty-text">暂无通知</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -139,6 +139,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -236,4 +237,5 @@ Page({
   font-size: 32rpx;
   color: #999;
 }
+
 </style>

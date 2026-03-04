@@ -1,27 +1,27 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <view class="container">
   <!-- Tab 切换 -->
   <view class="tabs">
-    <view class="tab {{activeTab === 'credit' ? 'active' : ''" data-type="credit" @click="onTabChange">
+    <view class="tab {{activeTab === 'credit' ? 'active' : ''}}" data-type="credit" @click="onTabChange">
       ⭐ 信用榜
     </view>
-    <view class="tab {{activeTab === 'active' ? 'active' : ''" data-type="active" @click="onTabChange">
+    <view class="tab {{activeTab === 'active' ? 'active' : ''}}" data-type="active" @click="onTabChange">
       🔥 活跃榜
     </view>
   </view>
 
   <!-- 排行榜列表 -->
   <view class="leaderboard-list">
-    <view class="leaderboard-item" v-for="item in list" :key="userId" @click="onUserTap" data-userid="{{item.userId">
+    <view class="leaderboard-item" v-for="(item, index) in list" :key="item.userId" @click="onUserTap" :data-userid="item.userId">
       <!-- 排名 -->
-      <view class="rank rank-{{item.rank">
+      <view class="rank rank-{{item.rank}}">
         <text v-if="item.rank <= 3" class="rank-medal">{{item.rank === 1 ? '🥇' : (item.rank === 2 ? '🥈' : '🥉')}}</text>
         <text v-else class="rank-number">{{item.rank}}</text>
       </view>
       
       <!-- 用户信息 -->
-      <image class="avatar" src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
+      <image class="avatar" :src="item.avatar || '/images/default-avatar.jpg'" mode="aspectFill"></image>
       <view class="user-info">
         <text class="nickname">{{item.nickname}}</text>
       </view>
@@ -45,6 +45,7 @@
     <text class="empty-text">暂无排行数据</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -92,6 +93,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -211,4 +213,5 @@ Page({
   font-size: 28rpx;
   color: #999;
 }
+
 </style>

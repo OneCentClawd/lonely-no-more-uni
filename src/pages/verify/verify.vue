@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <view class="container">
   <!-- 实名认证卡片 -->
@@ -6,7 +6,7 @@
     <view class="card-header">
       <text class="card-icon">🪪</text>
       <text class="card-title">实名认证</text>
-      <view class="status-badge status-{{realNameStatus">
+      <view class="status-badge status-{{realNameStatus}}">
         {{realNameStatusText}}
       </view>
     </view>
@@ -14,16 +14,16 @@
     <view class="card-body" v-if="realNameStatus === 0 || realNameStatus === 3">
       <view class="form-item">
         <text class="label">真实姓名</text>
-        <input class="input" placeholder="请输入真实姓名" value="{{realName" @input="onRealNameInput" />
+        <input class="input" placeholder="请输入真实姓名" :value="realName" @input="onRealNameInput" />
       </view>
       <view class="form-item">
         <text class="label">身份证号</text>
-        <input class="input" placeholder="请输入18位身份证号" value="{{idCard" @input="onIdCardInput" maxlength="18" />
+        <input class="input" placeholder="请输入18位身份证号" :value="idCard" @input="onIdCardInput" maxlength="18" />
       </view>
       <view class="reject-reason" v-if="realNameStatus === 3 && rejectReason">
         <text>拒绝原因：{{rejectReason}}</text>
       </view>
-      <button class="submit-btn" @click="submitRealName" disabled="{{submitting">提交认证</button>
+      <button class="submit-btn" @click="submitRealName" :disabled="submitting">提交认证</button>
     </view>
     
     <view class="card-body verified" v-if="realNameStatus === 1">
@@ -41,7 +41,7 @@
     <view class="card-header">
       <text class="card-icon">🎓</text>
       <text class="card-title">学生认证</text>
-      <view class="status-badge status-{{studentStatus">
+      <view class="status-badge status-{{studentStatus}}">
         {{studentStatusText}}
       </view>
     </view>
@@ -49,12 +49,12 @@
     <view class="card-body" v-if="studentStatus === 0 || studentStatus === 3">
       <view class="form-item">
         <text class="label">学校名称</text>
-        <input class="input" placeholder="请输入学校全称" value="{{school" @input="onSchoolInput" />
+        <input class="input" placeholder="请输入学校全称" :value="school" @input="onSchoolInput" />
       </view>
       <view class="form-item">
         <text class="label">学生证照片</text>
         <view class="upload-area" @click="uploadStudentCard">
-          <image v-if="studentCardImage" class="preview-image" src="studentCardImage" mode="aspectFit"></image>
+          <image v-if="studentCardImage" class="preview-image" :src="studentCardImage" mode="aspectFit"></image>
           <view v-else class="upload-placeholder">
             <text class="upload-icon">📷</text>
             <text class="upload-text">点击上传</text>
@@ -64,7 +64,7 @@
       <view class="reject-reason" v-if="studentStatus === 3 && rejectReason">
         <text>拒绝原因：{{rejectReason}}</text>
       </view>
-      <button class="submit-btn" @click="submitStudent" disabled="{{submitting">提交认证</button>
+      <button class="submit-btn" @click="submitStudent" :disabled="submitting">提交认证</button>
     </view>
     
     <view class="card-body verified" v-if="studentStatus === 1">
@@ -86,6 +86,7 @@
     <text class="tips-item">• 审核时间约 1-3 个工作日</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -264,6 +265,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -451,4 +453,5 @@ Page({
   color: #666;
   line-height: 1.8;
 }
+
 </style>

@@ -1,4 +1,4 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/user/user.wxml-->
 <view class="user-container">
@@ -9,7 +9,7 @@
   <block v-else-if="user">
     <!-- 头像和基本信息 -->
     <view class="user-header">
-      <image class="user-avatar" src="user.avatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onPreviewAvatar"></image>
+      <image class="user-avatar" :src="user.avatar || '/images/default-avatar.jpg'" mode="aspectFill" @click="onPreviewAvatar"></image>
       <view class="user-info">
         <view class="user-name-row">
           <text class="user-name">{{user.nickname || '用户' + user.id}}</text>
@@ -44,11 +44,10 @@
       <view class="photos-grid">
         <image 
           class="photo-item" 
-          v-for="item in user.photos" 
-          :key="*this" 
-          src="item" 
+          v-for="(item, index) in user.photos" :key="item" 
+          :src="item" 
           mode="aspectFill"
-          data-index="{{index"
+          :data-index="index"
           @click="onPreviewPhoto"
         ></image>
       </view>
@@ -58,7 +57,7 @@
     <view class="section" v-if="user.interests && user.interests.length > 0">
       <view class="section-title">兴趣爱好</view>
       <view class="tags-wrap">
-        <text class="tag" v-for="item in user.interests" :key="*this">{{item}}</text>
+        <text class="tag" v-for="(item, index) in user.interests" :key="item">{{item}}</text>
       </view>
     </view>
 
@@ -66,12 +65,12 @@
     <view class="section" v-if="activities && activities.length > 0">
       <view class="section-title">参与的活动 ({{activities.length}})</view>
       <view class="activity-list">
-        <view class="activity-item" v-for="item in activities" :key="id" @click="onActivityTap" data-id="{{item.id">
-          <image class="activity-cover" src="item.coverImage || '/images/default-cover.jpg'" mode="aspectFill"></image>
+        <view class="activity-item" v-for="(item, index) in activities" :key="item.id" @click="onActivityTap" :data-id="item.id">
+          <image class="activity-cover" :src="item.coverImage || '/images/default-cover.jpg'" mode="aspectFill"></image>
           <view class="activity-info">
             <text class="activity-title">{{item.title}}</text>
             <text class="activity-time">{{item.activityTime}}</text>
-            <view class="activity-status {{item.statusType">
+            <view class="activity-status {{item.statusType}}">
               {{item.statusText}}
             </view>
           </view>
@@ -93,9 +92,9 @@
         </view>
       </view>
       <view class="review-list" v-if="reviews.length > 0">
-        <view class="review-item" v-for="item in reviews" :key="id">
+        <view class="review-item" v-for="(item, index) in reviews" :key="item.id">
           <view class="review-header">
-            <image class="reviewer-avatar" src="item.raterAvatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
+            <image class="reviewer-avatar" :src="item.raterAvatar || '/images/default-avatar.jpg'" mode="aspectFill"/>
             <text class="reviewer-name">{{item.raterNickname}}</text>
             <text class="review-rating positive" v-if="item.rating === 2">👍</text>
             <text class="review-rating negative" v-else>👎</text>
@@ -137,6 +136,7 @@
     <text>用户不存在</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -382,6 +382,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -761,4 +762,5 @@ Page({
   font-size: 28rpx;
   margin-left: 8rpx;
 }
+
 </style>

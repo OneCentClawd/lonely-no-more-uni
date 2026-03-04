@@ -1,10 +1,10 @@
-<!-- 迁移自小程序, 需人工审查 -->
+<!-- 自动迁移，需人工审查 -->
 <template>
 <!--pages/detail/detail.wxml-->
 <view class="container" v-if="activity">
   <!-- 封面图 -->
   <view class="cover-section" v-if="activity.coverImage" @click="onPreviewCover">
-    <image class="cover-image" src="activity.coverImage" mode="aspectFill"></image>
+    <image class="cover-image" :src="activity.coverImage" mode="aspectFill"></image>
   </view>
 
   <!-- 头部信息 -->
@@ -58,13 +58,13 @@
   <view class="members-card card">
     <view class="section-title">参与者 ({{activity.currentMembers}})</view>
     <view class="members-list">
-      <view class="member-item" v-for="item in activity.members" :key="id" @click="onMemberTap" data-userid="{{item.userId">
-        <image class="member-avatar" src="item.avatar" mode="aspectFill"></image>
+      <view class="member-item" v-for="(item, index) in activity.members" :key="item.id" @click="onMemberTap" :data-userid="item.userId">
+        <image class="member-avatar" :src="item.avatar" mode="aspectFill"></image>
         <text class="member-name">{{item.nickname}}</text>
         <text class="creator-badge" v-if="item.role === 1">发起人</text>
       </view>
       <!-- 空位 -->
-      <view class="member-item empty" v-for="item in activity.maxMembers - activity.currentMembers" :key="index">
+      <view class="member-item empty" v-for="(item, index) in activity.maxMembers - activity.currentMembers" :key="item.index">
         <view class="empty-avatar">+</view>
         <text class="member-name text-gray">空位</text>
       </view>
@@ -87,9 +87,9 @@
       </view>
     </view>
     <view class="photos-grid" v-if="photos.length > 0">
-      <view class="photo-item" v-for="item in photos" :key="id" @click="onPreviewPhoto" data-index="{{index">
-        <image class="photo-image" src="item.imageUrl" mode="aspectFill"></image>
-        <view class="photo-delete" v-if="item.userId === userId" @click.stop="onDeletePhoto" data-id="{{item.id">×</view>
+      <view class="photo-item" v-for="(item, index) in photos" :key="item.id" @click="onPreviewPhoto" :data-index="index">
+        <image class="photo-image" :src="item.imageUrl" mode="aspectFill"></image>
+        <view class="photo-delete" v-if="item.userId === userId" @click.stop="onDeletePhoto" :data-id="item.id">×</view>
       </view>
     </view>
     <view class="photos-empty" v-if="photos.length === 0">
@@ -101,7 +101,7 @@
   <view class="creator-card card">
     <view class="section-title">发起人</view>
     <view class="creator-info">
-      <image class="creator-avatar" src="activity.creator.avatar" mode="aspectFill"></image>
+      <image class="creator-avatar" :src="activity.creator.avatar" mode="aspectFill"></image>
       <view class="creator-detail">
         <text class="creator-name">{{activity.creator.nickname}}</text>
         <text class="creator-credit">信用分：{{activity.creator.creditScore}}</text>
@@ -155,8 +155,8 @@
 
 <!-- 海报弹窗 -->
 <view class="poster-modal" v-if="showPoster" @click="onClosePoster">
-  <view class="poster-content" @click.stop="">
-    <image class="poster-image" src="posterImage" mode="widthFix" show-menu-by-longpress="true"></image>
+  <view class="poster-content" catchtap="">
+    <image class="poster-image" :src="posterImage" mode="widthFix" show-menu-by-longpress="true"></image>
     <view class="poster-actions">
       <button class="poster-btn" @click="onSavePoster">保存到相册</button>
       <button class="poster-btn cancel" @click="onClosePoster">关闭</button>
@@ -164,6 +164,7 @@
     <text class="poster-hint">长按图片可分享给好友</text>
   </view>
 </view>
+
 </template>
 
 <script>
@@ -704,6 +705,7 @@ Page({
     })
   }
 })
+
 </script>
 
 <style scoped>
@@ -1126,4 +1128,5 @@ Page({
   font-size: 24rpx;
   color: rgba(255, 255, 255, 0.6);
 }
+
 </style>
