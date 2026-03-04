@@ -12,9 +12,9 @@
     <view class="nearby-btn" @click="onNearbyPeople">
       <text class="nearby-text">附近的人</text>
     </view>
-    <picker class="distance-picker" mode="selector" :range="distanceOptions" range-key="label" :value="distanceIndex" @change="onDistanceChange">
+    <picker class="distance-picker" mode="selector" :range="distanceLabels" :value="distanceIndex" @change="onDistanceChange">
       <view class="distance-select">
-        <text class="distance-text">{{distanceOptions[distanceIndex].label}}</text>
+        <text class="distance-text">{{distanceLabels[distanceIndex]}}</text>
         <text class="distance-arrow">▼</text>
       </view>
     </picker>
@@ -200,12 +200,15 @@ const distanceOptions = [
   { label: '20km', value: 20 },
   { label: '50km', value: 50 }
 ]
+// H5 picker 需要简单字符串数组
+const distanceLabels = distanceOptions.map(d => d.label)
 
 export default {
   data() {
     return {
       categories,
       distanceOptions,
+      distanceLabels,
       distanceIndex: 1, // 默认10km
       activities: [],
       loading: true,
