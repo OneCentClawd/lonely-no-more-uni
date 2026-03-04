@@ -12,7 +12,7 @@
     <view class="nearby-btn" @click="onNearbyPeople">
       <text class="nearby-text">附近的人</text>
     </view>
-    <picker class="distance-picker" mode="selector" range="{{distanceOptions}}" range-key="label" :value="distanceIndex" @change="onDistanceChange">
+    <picker class="distance-picker" mode="selector" :range="distanceOptions" range-key="label" :value="distanceIndex" @change="onDistanceChange">
       <view class="distance-select">
         <text class="distance-text">{{distanceOptions[distanceIndex].label}}</text>
         <text class="distance-arrow">▼</text>
@@ -64,7 +64,7 @@
   <scroll-view class="category-scroll" scroll-x>
     <view class="category-list">
       <view 
-        class="category-item {{item.active ? 'active' : ''}}" 
+        :class="['category-item', item.active ? 'active' : '']" 
         v-for="(item, index) in categories" :key="item.name"
         :data-index="index"
         @click="onCategoryTap"
@@ -97,7 +97,7 @@
   <!-- 活动列表 -->
   <view class="activity-list" v-if="!loading">
     <view 
-      class="activity-card card {{item.coverImage ? 'has-cover' : ''}}" 
+      :class="['activity-card card', item.coverImage ? 'has-cover' : '']" 
       v-for="(item, index) in activities" :key="item.id"
       :data-id="item.id"
       @click="onActivityTap"

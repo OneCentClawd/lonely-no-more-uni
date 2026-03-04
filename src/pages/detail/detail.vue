@@ -155,7 +155,7 @@
 
 <!-- 海报弹窗 -->
 <view class="poster-modal" v-if="showPoster" @click="onClosePoster">
-  <view class="poster-content" catchtap="">
+  <view class="poster-content" @click.stop="">
     <image class="poster-image" :src="posterImage" mode="widthFix" show-menu-by-longpress="true"></image>
     <view class="poster-actions">
       <button class="poster-btn" @click="onSavePoster">保存到相册</button>

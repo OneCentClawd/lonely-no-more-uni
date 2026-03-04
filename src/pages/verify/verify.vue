@@ -6,7 +6,7 @@
     <view class="card-header">
       <text class="card-icon">🪪</text>
       <text class="card-title">实名认证</text>
-      <view class="status-badge status-{{realNameStatus}}">
+      <view :class="['status-badge status-', realNameStatus]">
         {{realNameStatusText}}
       </view>
     </view>
@@ -41,7 +41,7 @@
     <view class="card-header">
       <text class="card-icon">🎓</text>
       <text class="card-title">学生认证</text>
-      <view class="status-badge status-{{studentStatus}}">
+      <view :class="['status-badge status-', studentStatus]">
         {{studentStatusText}}
       </view>
     </view>

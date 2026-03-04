@@ -48,7 +48,7 @@
   <view class="section">
     <view class="section-title">生日</view>
     <picker mode="date" :value="birthday" start="1950-01-01" end="2015-12-31" @change="onBirthdayChange">
-      <view class="picker-field {{birthday ? '' : 'placeholder'}}">
+      <view :class="['picker-field', birthday ? '' : 'placeholder']">
         {{birthday || '选择你的生日'}}
       </view>
     </picker>
@@ -75,7 +75,7 @@
     <view class="section-title">兴趣标签 <text class="hint">(最多选5个)</text></view>
     <view class="interest-grid">
       <view 
-        class="interest-item {{selectedMap[item] ? 'selected' : ''}}"
+        :class="['interest-item', selectedMap[item] ? 'selected' : '']"
         v-for="(item, index) in interestOptions" :key="item"
         :data-interest="item"
         @click="onInterestTap"

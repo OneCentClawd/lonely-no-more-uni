@@ -40,13 +40,13 @@
     
     <!-- Tab 切换 -->
     <view class="tabs">
-      <view class="tab {{activeTab === 0 ? 'active' : ''}}" data-index="0" @click="onTabChange">
+      <view :class="['tab', activeTab === 0 ? 'active' : '']" data-index="0" @click="onTabChange">
         全部
       </view>
-      <view class="tab {{activeTab === 1 ? 'active' : ''}}" data-index="1" @click="onTabChange">
+      <view :class="['tab', activeTab === 1 ? 'active' : '']" data-index="1" @click="onTabChange">
         我发起的
       </view>
-      <view class="tab {{activeTab === 2 ? 'active' : ''}}" data-index="2" @click="onTabChange">
+      <view :class="['tab', activeTab === 2 ? 'active' : '']" data-index="2" @click="onTabChange">
         我参与的
       </view>
     </view>
@@ -70,7 +70,7 @@
           <view class="unread-dot" v-if="item.unreadCount > 0">
             <text>{{item.unreadCount > 99 ? '99+' : item.unreadCount}}</text>
           </view>
-          <text class="status-badge {{item.status === 0 ? 'recruiting' : ''}}">
+          <text :class="['status-badge', item.status === 0 ? 'recruiting' : '']">
             {{item.status === 0 ? '招募中' : (item.status === 1 ? '已满员' : (item.status === 3 ? '已结束' : '已取消'))}}
           </text>
         </view>

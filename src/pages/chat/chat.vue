@@ -13,7 +13,7 @@
 
   <!-- 成员列表弹窗 -->
   <view class="members-modal" v-if="showMembersModal" @click="onHideMembers">
-    <view class="members-content" catchtap="">
+    <view class="members-content" @click.stop="">
       <view class="members-header">
         <text class="members-title">群成员 ({{memberCount}})</text>
         <text class="close-btn" @click="onHideMembers">×</text>
@@ -40,10 +40,10 @@
   <scroll-view 
     class="message-list" 
     scroll-y 
-    scroll-into-view="{{scrollToMessage}}"
+    :scroll-into-view="scrollToMessage"
     scroll-with-animation
-    enhanced="{{true}}"
-    bounces="{{false}}"
+    :enhanced="true"
+    :bounces="false"
   >
     <!-- 空状态 -->
     <view class="empty-state" v-if="messages.length === 0 && !loading">
@@ -63,7 +63,7 @@
       </view>
       
       <!-- 普通消息 -->
-      <view class="message-item {{item.isMine ? 'mine' : ''}}" 
+      <view :class="['message-item', item.isMine ? 'mine' : '']" 
             v-if="!item.isSystem"
             id="msg-{{item.id}}">
         <!-- 他人消息：头像在左 -->
@@ -110,7 +110,7 @@
       @blur="onInputBlur"
       :disabled="!socketOpen"
     />
-    <button class="send-btn {{inputValue ? '' : 'disabled'}}" @click="onSend" :disabled="!socketOpen || !inputValue">发送</button>
+    <button :class="['send-btn', inputValue ? '' : 'disabled']" @click="onSend" :disabled="!socketOpen || !inputValue">发送</button>
   </view>
 </view>
 

@@ -18,11 +18,11 @@
         </view>
       </view>
       <view class="rating-buttons">
-        <view class="rating-btn positive {{item.selected === 2 ? 'selected' : ''}}" :data-index="index" data-rating="2" @click="onRatingTap">
+        <view :class="['rating-btn positive', item.selected === 2 ? 'selected' : '']" :data-index="index" data-rating="2" @click="onRatingTap">
           <text class="rating-icon">👍</text>
           <text class="rating-text">好评</text>
         </view>
-        <view class="rating-btn negative {{item.selected === 1 ? 'selected' : ''}}" :data-index="index" data-rating="1" @click="onRatingTap">
+        <view :class="['rating-btn negative', item.selected === 1 ? 'selected' : '']" :data-index="index" data-rating="1" @click="onRatingTap">
           <text class="rating-icon">👎</text>
           <text class="rating-text">差评</text>
         </view>

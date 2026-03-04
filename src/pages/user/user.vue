@@ -70,7 +70,7 @@
           <view class="activity-info">
             <text class="activity-title">{{item.title}}</text>
             <text class="activity-time">{{item.activityTime}}</text>
-            <view class="activity-status {{item.statusType}}">
+            <view :class="['activity-status', item.statusType]">
               {{item.statusText}}
             </view>
           </view>

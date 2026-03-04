@@ -3,10 +3,10 @@
 <view class="container">
   <!-- Tab 切换 -->
   <view class="tabs">
-    <view class="tab {{activeTab === 'credit' ? 'active' : ''}}" data-type="credit" @click="onTabChange">
+    <view :class="['tab', activeTab === 'credit' ? 'active' : '']" data-type="credit" @click="onTabChange">
       ⭐ 信用榜
     </view>
-    <view class="tab {{activeTab === 'active' ? 'active' : ''}}" data-type="active" @click="onTabChange">
+    <view :class="['tab', activeTab === 'active' ? 'active' : '']" data-type="active" @click="onTabChange">
       🔥 活跃榜
     </view>
   </view>
@@ -15,7 +15,7 @@
   <view class="leaderboard-list">
     <view class="leaderboard-item" v-for="(item, index) in list" :key="item.userId" @click="onUserTap" :data-userid="item.userId">
       <!-- 排名 -->
-      <view class="rank rank-{{item.rank}}">
+      <view :class="['rank rank-', item.rank]">
         <text v-if="item.rank <= 3" class="rank-medal">{{item.rank === 1 ? '🥇' : (item.rank === 2 ? '🥈' : '🥉')}}</text>
         <text v-else class="rank-number">{{item.rank}}</text>
       </view>

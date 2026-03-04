@@ -10,10 +10,10 @@
   <!-- 通知列表 -->
   <view class="notification-list">
     <view 
-      class="notification-item {{item.isRead ? 'read' : 'unread'}}"
+      :class="['notification-item', item.isRead ? 'read' : 'unread']"
       v-for="(item, index) in notifications" :key="item.id"
       :data-id="item.id"
-      data-activity-id="{{item.activityId}}"
+      :data-activity-id="item.activityId"
       @click="onNotificationTap"
     >
       <view class="notification-icon">

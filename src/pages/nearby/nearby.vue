@@ -3,7 +3,7 @@
 <view class="container">
   <!-- 筛选栏 -->
   <view class="filter-bar">
-    <picker class="radius-picker" mode="selector" range="{{radiusOptions}}" range-key="label" :value="radiusIndex" @change="onRadiusChange">
+    <picker class="radius-picker" mode="selector" :range="radiusOptions" range-key="label" :value="radiusIndex" @change="onRadiusChange">
       <view class="radius-select">
         <text class="radius-text">{{radiusOptions[radiusIndex].label}}</text>
         <text class="radius-arrow">▼</text>

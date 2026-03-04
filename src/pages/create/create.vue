@@ -25,7 +25,7 @@
     <view class="section-title">活动类型</view>
     <view class="category-grid">
       <view 
-        class="category-item {{selectedCategory === index ? 'selected' : ''}}"
+        :class="['category-item', selectedCategory === index ? 'selected' : '']"
         v-for="(item, index) in categories" :key="item.name"
         :data-index="index"
         @click="onCategoryTap"
@@ -82,7 +82,7 @@
     <view class="section-title">活动地点</view>
     <view class="location-picker" @click="onChooseLocation">
       <text class="location-icon">📍</text>
-      <text class="location-text {{address ? '' : 'placeholder'}}">
+      <text :class="['location-text', address ? '' : 'placeholder']">
         {{address || '点击选择地点'}}
       </text>
       <text class="arrow">›</text>
@@ -93,13 +93,13 @@
   <view class="section">
     <view class="section-title">活动时间</view>
     <view class="time-picker-row">
-      <picker mode="selector" range="{{dates}}" range-key="label" :value="dateIndex" @change="onDateChange">
+      <picker mode="selector" :range="dates" range-key="label" :value="dateIndex" @change="onDateChange">
         <view class="picker-item">
           <text>{{dates[dateIndex].label}}</text>
           <text class="arrow">›</text>
         </view>
       </picker>
-      <picker v-if="dates[dateIndex].value !== 'NOW'" mode="selector" range="{{times}}" range-key="label" :value="timeIndex" @change="onTimeChange">
+      <picker v-if="dates[dateIndex].value !== 'NOW'" mode="selector" :range="times" range-key="label" :value="timeIndex" @change="onTimeChange">
         <view class="picker-item">
           <text>{{times[timeIndex].label}}</text>
           <text class="arrow">›</text>
