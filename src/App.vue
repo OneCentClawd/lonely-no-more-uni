@@ -40,7 +40,7 @@ export default {
     // H5/APP: 邮箱验证码登录
     loginByEmail(email, code, callback) {
       uni.request({
-        url: `${this.globalData.baseUrl}/auth/login-by-code`,
+        url: `${this.globalData.baseUrl}/auth/login-by-email`,
         method: 'POST',
         header: { 'Content-Type': 'application/json' },
         data: { email, code },
